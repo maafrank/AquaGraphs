@@ -1,2 +1,2 @@
 # AquaGraphs
-Explore Morro Bay wave dat
+Explore Morro Bay wave data
