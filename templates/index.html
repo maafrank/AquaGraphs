@@ -10,12 +10,6 @@
   </head>
   <body>
     <div class="container">
-      <p>TODO:
-	<ul>
-	  <li>Figure out a nice way to display partitions</li>
-	  <li>Finish Good Surf Conditions section</li>
-	</ul>
-      </p>
       <h1>Surf Conditions Visualization</h1>
       <section>
 	<h2>Date Range Filter</h2>
@@ -388,7 +382,20 @@
 	openVis3_2()
 	
       </script>
-      
+
+      <h2> Future Steps </h2>
+      <p>Make section more interactive by being able to change features such as dirrerent swell partition or year.</p>
+	<div>
+	  <label id="partition_vis1">Partition Number:</label> 
+	  <select name="partitionvis1" id="partitionvis1" onchange = "openVis1()"> 
+    	    <option value="Partition0">Partition 0</option>
+            <option value="Partition1">Partition 1</option> 
+            <option value="Partition2">Partition 2</option> 
+            <option value="Partition3">Partition 3</option> 
+            <option value="Partition4">Partition 4</option> 
+            <option value="Partition5">Partition 5</option>
+	  </select>
+	</div>
     </div>
   </body>
 </html>
