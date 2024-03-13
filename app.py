@@ -1,6 +1,9 @@
 from flask import Flask, jsonify, render_template, request
 import altair as alt
 import pandas as pd
+import numpy as np
+import datetime
+from pytz import timezone
 
 
 
@@ -289,6 +292,155 @@ def update_composite_chart():
     
 
     return jsonify(chart_spec)
+
+
+
+###############################################################################################################
+
+#####################
+## Data Processing ##
+#####################
+
+MorroBayHeights = pd.read_csv("data/MorroBayHeights.csv")
+MorroBayHeights["hour"]= list(map(lambda x: datetime.datetime.fromtimestamp(x).astimezone(timezone('US/Pacific')).time().hour, MorroBayHeights["datetime"]))
+MorroBayHeights["year"]= list(map(lambda x: datetime.datetime.fromtimestamp(x).astimezone(timezone('US/Pacific')).year, MorroBayHeights["datetime"]))
+# More than 5000 rows
+alt.data_transformers.disable_max_rows()
+
+#####################################
+## Wave Direction and Swell Height ##
+#####################################
+
+##Scatter Plot
+def wave_direction_height(partition_num, df = MorroBayHeights):
+    edit_df = df[[f"lotusSighPart{partition_num}_mt", f"lotusPDirPart{partition_num}_deg"]]
+    return alt.Chart(edit_df, title = f"Wave Direction vs. Height for Partition {partition_num}").mark_circle(size=60).encode(
+    x=alt.X(f"lotusPDirPart{partition_num}_deg", title = "Partition Direction"),
+    y=alt.Y(f"lotusSighPart{partition_num}_mt", title = "Partition Height")
+    ).properties(
+    width=250,
+    height=250)
+
+@app.route('/updatevis1', methods=['GET'])
+def updatevis1():
+    vis3_1 = []
+    for i in np.arange(6):
+        vis3_1.append(wave_direction_height(i, MorroBayHeights))
+    return alt.vconcat(alt.hconcat(vis3_1[0], vis3_1[1], vis3_1[2]), alt.hconcat(vis3_1[3], vis3_1[4], vis3_1[5])).to_json()
+    
+###############################
+## Wave Direction in a Month ##
+###############################
+
+##Iteration 1
+def wave_dir_month(year, month, df=MorroBayHeights):
+    df["date"] = pd.to_datetime(df["datetime_local"].apply(lambda x: datetime.datetime.strptime(x[:10], "%Y-%m-%d")))
+    month_data = df.loc[(df['date'].dt.month==month) & (df['date'].dt.year==year)]
+    agg_month_data = month_data.groupby('date')[["lotusPDirPart0_deg", "lotusPDirPart1_deg", "lotusPDirPart2_deg", "lotusPDirPart3_deg", "lotusPDirPart4_deg", "lotusPDirPart5_deg"]].mean().reset_index()
+    agg_month_data_melt = agg_month_data.melt(id_vars=["date"], value_vars=["lotusPDirPart0_deg", "lotusPDirPart1_deg", "lotusPDirPart2_deg", "lotusPDirPart3_deg", "lotusPDirPart4_deg", "lotusPDirPart5_deg"], var_name = "Partition", value_name = "Direction")
+    
+    base = alt.Chart(agg_month_data_melt, title = f"Wave direction in month {month} of year {year}").mark_line().encode(
+        x="date",
+        y="Direction", color = "Partition")
+    
+    return base
+
+@app.route('/updatevis2_1', methods=['GET'])
+def updatevis2_1():
+    row1 = alt.hconcat(wave_dir_month(2019, 10, MorroBayHeights), wave_dir_month(2020, 10, MorroBayHeights))
+    row2 = alt.hconcat(wave_dir_month(2021, 10, MorroBayHeights), wave_dir_month(2022, 10, MorroBayHeights))
+    return alt.vconcat(row1, row2).to_json()
+
+
+##Iteration 2
+def wave_dir_month2(month, partition, df=MorroBayHeights):
+    df["date"] = pd.to_datetime(df["datetime_local"].apply(lambda x: datetime.datetime.strptime(x[:10], "%Y-%m-%d")))
+    month_data = df.loc[(df['date'].dt.month==month) & (df['date'].dt.year!=2019)]
+    agg_month_data = month_data.groupby('date')[[f"lotusPDirPart{partition}_deg"]].mean().reset_index()
+    agg_month_data["year"] = agg_month_data['date'].dt.year
+    agg_month_data["month_day"] = agg_month_data["date"].dt.strftime('%m-%d')
+    print(agg_month_data.head())
+    base = alt.Chart(agg_month_data, title = f"Wave direction in month {month} of partition {partition}").mark_line().encode(
+        x="month_day",
+        y=f"lotusPDirPart{partition}_deg", color = "year").properties(
+    width=350,
+    height=250)
+    
+    return base
+
+@app.route('/updatevis2_2', methods=['GET'])
+def updatevis2_2():
+    row1 = alt.hconcat(wave_dir_month2(10, 0, MorroBayHeights), wave_dir_month2(10, 1, MorroBayHeights), wave_dir_month2(10, 2, MorroBayHeights))
+    row2 = alt.hconcat(wave_dir_month2(10, 3, MorroBayHeights), wave_dir_month2(10, 4, MorroBayHeights), wave_dir_month2(10, 5, MorroBayHeights))
+    return alt.vconcat(row1, row2).to_json()
+
+#Iteration 3
+def wave_dir_month3(year, month, partition, df=MorroBayHeights):
+    edit_df = df[["datetime_local", f"lotusPDirPart{partition}_deg", "hour"]]
+    edit_df["date"] = pd.to_datetime(edit_df["datetime_local"].apply(lambda x: datetime.datetime.strptime(x[:10], "%Y-%m-%d")))
+    month_data = edit_df.loc[(edit_df['date'].dt.month==month) & (edit_df['date'].dt.year==year)]
+    month_data["month_day"] = month_data["date"].dt.strftime('%m-%d')
+    base = alt.Chart(month_data[["month_day", "hour", f"lotusPDirPart{partition}_deg"]], title = f"Wave direction in year {year} month {month} of partition {partition}").mark_rect().encode(
+    x='month_day:O',
+    y='hour:O',
+    color=f"lotusPDirPart{partition}_deg:Q").properties(
+    width=350,
+    height=250)
+    return base
+
+@app.route('/updatevis2_3', methods=['GET'])
+def updatevis2_3():
+    row1 = alt.hconcat(wave_dir_month3(2020, 10, 0, MorroBayHeights), wave_dir_month3(2021, 10, 0, MorroBayHeights))
+    row2 = alt.hconcat(wave_dir_month3(2022, 10, 0, MorroBayHeights), wave_dir_month3(2023, 10, 0, MorroBayHeights))
+    return alt.vconcat(row1, row2).to_json()
+
+########################################
+## Wave Direction, Period, and Height ##
+########################################
+#Convert direction in degrees to north, south, east, west
+def compass(degree):
+    if degree <45:
+        return "North"
+    elif degree <135:
+        return "East"
+    elif degree < 225:
+        return "South"
+    elif degree < 315:
+        return "West"
+    else:
+        return "North"
+    
+#Iteration 1
+def wave_height_period(partition_num, df, compass_direction = None):
+    #interested in lotusTP and lotusPDir variables
+
+    alt.data_transformers.disable_max_rows()
+    direction = df[f"lotusPDirPart{partition_num}_deg"].apply(lambda x: compass(x))
+    df["Direction"] = direction
+    edit_df = df[[f"lotusTPPart{partition_num}_sec", f"lotusSighPart{partition_num}_mt", "Direction"]]
+    if compass_direction != None:
+        edit_df = edit_df[edit_df["Direction"] == compass_direction]
+    return alt.Chart(edit_df, title = f"Period vs Height for Partition {partition_num}").mark_circle(size=60).encode(
+    x=alt.X(f"lotusTPPart{partition_num}_sec", title = "Partition Period"),
+    y=alt.Y(f"lotusSighPart{partition_num}_mt", title = "Wave Height"),
+    color = "Direction"
+    ).properties(
+    width=250,
+    height=250)
+    
+@app.route('/updatevis3_1', methods=['GET'])
+def updatevis3_1():
+    return wave_height_period(0, MorroBayHeights).to_json()
+
+#Iteration 2
+
+@app.route('/updatevis3_2', methods=['GET'])
+def updatevis3_2():
+    row1 = alt.hconcat(wave_height_period(0, MorroBayHeights, "North"), wave_height_period(0, MorroBayHeights, "South"))
+    row2 = alt.hconcat(wave_height_period(0, MorroBayHeights, "East"), wave_height_period(0, MorroBayHeights, "West"))
+    return alt.vconcat(row1, row2).to_json()
+
+###############################################################################################################
 
 @app.route('/')
 def home():

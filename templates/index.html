@@ -280,8 +280,115 @@
 	    }
 	    descriptionElement.innerHTML = description;
 	}
+
+	</script>
+
+
+      <h1>Wave Direction</h1>
+      <h2> Is There a Relationship between Wave Direction and Swell Height? </h2>
+      <h3>Iteration 1 </h3>
+      <p> For this iteration, I made a scatter plot to see the relationship between the wave direction and swell height by partition. From this visualization below, we can see that most of the waves headed in the South to Northwest direction. There seems to be two clusters for wave direction.</p>
+      
+      <p>For partition 0, 1, and 2, it seems that swell height can be higher for swell headed in the Northwest. However, for partition 3, 4, and 5, wave direction does not seem to have a relationship with swell height.</p>
+      
+      <div id="vis1"></div>
+      
+      
+      <script>
+	function openVis1() {
+	    //const pnum = document.getElementById(`partitionvis1`).value;
+	    const response = fetch('/updatevis1').then(response => response.json()).then(chartSpec => {vegaEmbed(`#vis1`, chartSpec);}).catch(error => console.error('Error loading chart:', error));
+	    console.log(response)
+	}
+	openVis1()
+      </script>
+      
+      <h3>Iteration 2 </h3>
+      
+      <p> While the visualization in iteration 1 is easy to see trends in wave direction as a number, it is not easy to convert the numbers to North, South, East, West. Therefore, in the second visualization, I made a radial chart when the location of each dot represent the degree of the wave direction and the distance from the center of the circle represents the swell height. </p>
+      
+      <div class='tableauPlaceholder' id='viz1710335392267' style='position: relative'><noscript><a href='#'><img alt='Wave Direction and Height Radial Graph ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Wa&#47;Waveradialgraph&#47;Sheet2&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='Waveradialgraph&#47;Sheet2' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Wa&#47;Waveradialgraph&#47;Sheet2&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1710335392267');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+      
+      
+      <h2> How Does Wave Direction Differ Within a Month? </h2>
+      <h3>Iteration 1 </h3>
+      <p> For the first iteration, I made a line chart that presents the wave direction by day within a month for all 6 partitions. </p>
+      
+      <div id="vis2_1"></div>
+      
+      
+      <script>
+	function openVis2_1() {
+	    //const pnum = document.getElementById(`partitionvis2`).value;
+	    //console.log(pnum)
+	    const response = fetch('/updatevis2_1').then(response => response.json()).then(chartSpec => {vegaEmbed(`#vis2_1`, chartSpec);}).catch(error => console.error('Error loading chart:', error));
+	    console.log(response)
+	}
+	openVis2_1()
+      </script>	
+      
+      <h3>Iteration 2 </h3>
+      <p>As the lines go up and down frequently in the line graph for iteration 1, there are several overlaps between the lines that it is hard to understand trends and compare with different years. Therefore in the second iteration, I made a line chart that presents the wave direction for a certain month and partition. Each line represents a different year. </p>
+      <div id="vis2_2"></div>
+      
+      
+      <script>
+	function openVis2_2() {
+	    //const pnum = document.getElementById(`partitionvis2`).value;
+	    //console.log(pnum)
+	    const response = fetch('/updatevis2_2').then(response => response.json()).then(chartSpec => {vegaEmbed(`#vis2_2`, chartSpec);}).catch(error => console.error('Error loading chart:', error));
+	    console.log(response)
+	}
+	openVis2_2()
 	
       </script>
+      
+      <h3>Iteration 3 </h3>
+      
+      <p> In the third iteration, I created a heatmap to show the wave direction by color instead of a line. While the first 2 iterations averaged the direction, this iteration encodes the wave direction by hour of every day in a month. It can now be seen that the wave direction is not constant throughout the day and that the wave direction is cyclical. </p>
+      
+      <div id="vis2_3"></div>
+      
+      <script>
+	function openVis2_3() {
+	    //const pnum = document.getElementById(`partitionvis2`).value;
+	    //console.log(pnum)
+	    const response = fetch('/updatevis2_3').then(response => response.json()).then(chartSpec => {vegaEmbed(`#vis2_3`, chartSpec);}).catch(error => console.error('Error loading chart:', error));
+	    console.log(response)
+	}
+	openVis2_3()
+	
+      </script>
+      
+      <h2> Does Direction Affect Period and Swell Height? </h2>
+      <h3>Iteration 1 </h3>
+      <p> For my first iteration, I created a scatter plot to represent the relationship between the partition period and swell height. I color coded each dot in the scatter plot by the direction categorized as North, East, South or West. </p>
+      <div id="vis3_1"></div>
+      <script>
+	function openVis3_1() {
+	    //const pnum = document.getElementById(`partitionvis2`).value;
+	    //console.log(pnum)
+	    const response = fetch('/updatevis3_1').then(response => response.json()).then(chartSpec => {vegaEmbed(`#vis3_1`, chartSpec);}).catch(error => console.error('Error loading chart:', error));
+	    console.log(response)
+	}
+	openVis3_1()
+	
+      </script>
+      
+      <h3>Iteration 2 </h3>
+      <p>In iteration 1, the dot overlapped significantly, so it was challenging to see the differences by direction. Therefore in iteration 2, I graphed the partition period and swell height by a certain direction. By comparing the scatter plots of the different directions, it seems that swell height increases with the increase in period, regardless of the direction of the waves.</p>
+      <div id="vis3_2"></div>
+      <script>
+	function openVis3_2() {
+	    //const pnum = document.getElementById(`partitionvis2`).value;
+	    //console.log(pnum)
+	    const response = fetch('/updatevis3_2').then(response => response.json()).then(chartSpec => {vegaEmbed(`#vis3_2`, chartSpec);}).catch(error => console.error('Error loading chart:', error));
+	    console.log(response)
+	}
+	openVis3_2()
+	
+      </script>
+      
     </div>
   </body>
 </html>
