@@ -8,7 +8,7 @@ import pandas as pd
 ## Data Processing ##
 #####################
 def process_data(variable, aggregation_level, start_date=None, end_date=None):
-    data = pd.read_csv('MorroBayHeights.csv')
+    data = pd.read_csv('data/MorroBayHeights.csv')
     data['datetime'] = pd.to_datetime(data['datetime'], unit='s')
     
     # Filter data if start_date and end_date are provided
@@ -63,8 +63,6 @@ def process_data(variable, aggregation_level, start_date=None, end_date=None):
     
     aggregated_data = data.groupby('time_period').agg(agg_dict).reset_index()
     aggregated_data['time_period'] = aggregated_data['time_period'].astype(str)
-
-    print(aggregated_data)
     
     return aggregated_data
 
