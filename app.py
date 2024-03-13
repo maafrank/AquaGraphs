@@ -1,6 +1,9 @@
 from flask import Flask, jsonify, render_template, request
 import altair as alt
 import pandas as pd
+import numpy as np
+import datetime
+from pytz import timezone
 
 
 
@@ -298,7 +301,7 @@ def update_composite_chart():
 ## Data Processing ##
 #####################
 
-MorroBayHeights = pd.read_csv("MorroBayHeights.csv")
+MorroBayHeights = pd.read_csv("data/MorroBayHeights.csv")
 MorroBayHeights["hour"]= list(map(lambda x: datetime.datetime.fromtimestamp(x).astimezone(timezone('US/Pacific')).time().hour, MorroBayHeights["datetime"]))
 MorroBayHeights["year"]= list(map(lambda x: datetime.datetime.fromtimestamp(x).astimezone(timezone('US/Pacific')).year, MorroBayHeights["datetime"]))
 # More than 5000 rows
