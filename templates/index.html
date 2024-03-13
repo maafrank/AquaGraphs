@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Surf Conditions Prototype</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  </head>
+  <body>
+    <div class="container">
+      <p>TODO:
+	<ul>
+	  <li>Figure out a nice way to display partitions</li>
+	  <li>Finish Good Surf Conditions section</li>
+	</ul>
+      </p>
+      <h1>Surf Conditions Visualization</h1>
+      <section>
+	<h2>Date Range Filter</h2>
+	<label for="startDate">Start Date:</label>
+	<input type="date" id="startDate" name="start-date" value="2019-10-01" min="2019-01-01" max="2023-12-31" onchange="updateAllCharts()">
+	
+	<label for="endDate">End Date:</label>
+	<input type="date" id="endDate" name="end-date" value="2023-12-31" min="2019-01-01" max="2023-12-31" onchange="updateAllCharts()">
+      </section>
+      
+      <!-- Chart 1 Controls -->
+      <section>
+	<p id="chart1Description">Select a variable to see its description.</p>
+	<div>
+	  
+	  <select id="chartType1" onchange="loadChartData('1')">
+	    <option value="line">Line Chart</option>
+	    <option value="bar">Bar Chart</option>
+	  </select>
+	  
+          <select id="variable1" onchange="loadChartData('1')">Update Chart 1>
+            <option value="lotusSigh_mt">Wave Height (mt)</option>
+            <option value="tide_ft">Tide (ft)</option>
+	    <option value="lotusMinBWH_ft">lotusMinBWH_ft</option>
+	    <option value="lotusMaxBWH_ft">lotusMaxBWH_ft:</option>
+	    <option value="lotusSighPartX_mt">lotusSighPartX_mt</option>
+	    <option value="lotusTPPartX_sec">lotusTPPartX_sec</option>
+	    <option value="lotusPDirPartX_deg">lotusPDirPartX_deg</option>
+	    <option value="lotusSpreadPartX_deg">lotusSpreadPartX_deg</option>
+            <!-- Add more options as needed -->
+          </select>
+	  
+          <select id="aggregation1" onchange="loadChartData('1')">Update Chart 1>
+            <option value="Day">Day</option>
+            <option value="Week">Week</option>
+	    <option value="Month">Month</option>
+	    <option value="Season">Season</option>
+	    <option value="Season_Year">Season_Year</option>
+	    <option value="Year">Year</option>
+            <!-- Add more options as needed -->
+          </select>
+	  
+	</div>
+	<div id="chart1"></div>
+      </section>
+      
+      <!-- Chart 2 Controls -->
+      <section>
+	<h2>What Variables Impact Wave Height and Breaking Wave Height</h2>
+	<p>Select a variable alongside wave height and breaking wave height to analyze their relationships.</p>
+	<div>
+	  
+	  <select id="chartType2" onchange="loadCompositeChartData()">
+	    <option value="line">Line Chart</option>
+	    <option value="bar">Bar Chart</option>
+	  </select>
+	  
+	  <select id="variable2" onchange="loadCompositeChartData()">Update Chart 2>
+            <option value="lotusSigh_mt">Wave Height (mt)</option>
+            <option value="tide_ft">Tide (ft)</option>
+	    <option value="lotusMinBWH_ft">lotusMinBWH_ft</option>
+	    <option value="lotusMaxBWH_ft">lotusMaxBWH_ft:</option>
+	    <option value="lotusSighPartX_mt">lotusSighPartX_mt</option>
+	    <option value="lotusTPPartX_sec">lotusTPPartX_sec</option>
+	    <option value="lotusPDirPartX_deg">lotusPDirPartX_deg</option>
+	    <option value="lotusSpreadPartX_deg">lotusSpreadPartX_deg</option> 
+            <!-- Add more options as needed -->
+	  </select>
+	  
+	  <select id="aggregation2" onchange="loadCompositeChartData()">Update Chart 2>
+            <option value="Day">Day</option>
+            <option value="Week">Week</option>
+	    <option value="Month">Month</option>
+	    <option value="Season">Season</option>
+	    <option value="Season_Year">Season_Year</option>
+	    <option value="Year">Year</option>
+            <!-- Add more options as needed -->
+	  </select>
+	  
+	</div>
+	<div id="chart2"></div>
+      </section>
+      
+      <!-- Chart 3 Controls -->
+      <section>
+	<h2>Chart 3: What Makes Good Surf Conditions at Morro Bay</h2>
+	<p>Here we look at ideal conditions for surf at morro bay.</p>
+	<div>
+	  
+	  <select id="chartType3" onchange="loadChartData('3')">
+	    <option value="line">Line Chart</option>
+	    <option value="bar">Bar Chart</option>
+	  </select>
+	  
+	  <select id="variable3" onchange="loadChartData('3')">Update Chart 3>
+            <option value="lotusSigh_mt">Wave Height (mt)</option>
+            <option value="tide_ft">Tide (ft)</option>
+	    <option value="lotusMinBWH_ft">lotusMinBWH_ft</option>
+	    <option value="lotusMaxBWH_ft">lotusMaxBWH_ft:</option>
+	    <option value="lotusSighPartX_mt">lotusSighPartX_mt</option>
+	    <option value="lotusTPPartX_sec">lotusTPPartX_sec</option>
+	    <option value="lotusPDirPartX_deg">lotusPDirPartX_deg</option>
+	    <option value="lotusSpreadPartX_deg">lotusSpreadPartX_deg</option>
+            <!-- Add more options as needed -->
+	  </select>
+	  
+	  <select id="aggregation3" onchange="loadChartData('3')">Update Chart 3>
+            <option value="Day">Day</option>
+            <option value="Week">Week</option>
+	    <option value="Month">Month</option>
+	    <option value="Season">Season</option>
+	    <option value="Season_Year">Season_Year</option>
+	    <option value="Year">Year</option>
+            <!-- Add more options as needed -->
+	  </select>
+	  
+	</div>
+	<div id="chart3"></div>
+      </section>
+      <!-- Additional sections and charts as needed -->
+      
+      <script>
+	// Function to load and update chart data
+	function loadChartData(chartId) {	  
+	    const variable = document.getElementById(`variable${chartId}`).value;
+	    const aggregation = document.getElementById(`aggregation${chartId}`).value;
+	    const chartType = document.getElementById(`chartType${chartId}`).value;
+	    const startDate = document.getElementById('startDate').value;
+	    const endDate = document.getElementById('endDate').value;
+	    
+	    if (chartId === '1') {
+		updateDescription(chartId, variable);
+	    }
+	    
+	    const dateQuery = `&startDate=${startDate}&endDate=${endDate}`;
+	    fetch(`/update_chart?variable=${variable}&aggregation=${aggregation}${dateQuery}&chartType=${chartType}`)
+		.then(response => response.json())
+		.then(chartSpec => {
+		    vegaEmbed(`#chart${chartId}`, chartSpec);
+		})
+		.catch(error => console.error('Error loading chart:', error));
+	}
+	
+	function loadCompositeChartData() {
+	    const variable = document.getElementById("variable2").value;
+	    const aggregation = document.getElementById("aggregation2").value;
+	    const chartType = document.getElementById("chartType2").value; 
+	    const startDate = document.getElementById('startDate').value;
+	    const endDate = document.getElementById('endDate').value;
+	    
+	    fetch(`/update_composite_chart?variable=${variable}&aggregation=${aggregation}&startDate=${startDate}&endDate=${endDate}&chartType=${chartType}`)
+		.then(response => response.json())
+		.then(chartSpec => {
+		    vegaEmbed('#chart2', chartSpec);
+		})
+		.catch(error => console.error('Error loading composite chart:', error));
+	}
+	
+	function updateAllCharts() {
+	    loadChartData('1');
+	    loadChartData('3');
+	    loadCompositeChartData();
+	}
+	
+	// Call updateAllCharts initially to load all charts with default or initial dates
+	updateAllCharts();
+	
+	function updateDescription(chartId, variable) {
+	    const descriptionElement = document.getElementById(`chart${chartId}Description`);
+	    let description = "Select a variable to see its description."; // Default description
+	    
+	    // Update description based on the variable
+	    switch (variable) {
+	    case "lotusSigh_mt":
+		description = `
+     <h2><strong>lotusSigh_mt: Total significant wave height in meters:</strong></h2>
+    <p>In oceanography and marine forecasting, the "significant wave height" is a key statistic describing wave heights in water. It represents the average height of the highest one-third of waves observed over a specific period, providing a reliable estimation of wave conditions for mariners and surfers.</p>
+    <p>This metric is crucial for understanding sea conditions, focusing on larger waves that have greater impacts on activities such as surfing, boating, and coastal engineering. The "mt" signifies measurements in meters, adhering to international standards for scientific and navigational purposes.</p>
+    <p>Essentially, it indicates the average height of the highest one-third of waves at a location, measured in meters, vital for predicting surfing and sea conditions.</p>
+  `;
+		break;
+	    case "tide_ft":
+		description = `
+     <h2><strong>tide_ft: Tide level in feet:</strong></h2>
+    <p>Represents the tide level, crucial for oceanographic data and surf forecasting, showing the sea level at a specific time and location relative to a standard reference point. Tides, caused by gravitational interactions between Earth, Moon, and Sun, are essential for understanding:</p>
+    <ul>
+      <li><strong>Surfing and Coastal Activities:</strong> Tides affect wave shapes and quality, critical for selecting the best surf times.</li>
+      <li><strong>Marine Navigation:</strong> Tides influence water body depths, vital for safe boat and ship navigation.</li>
+      <li><strong>Coastal Management:</strong> Tides play a role in coastal erosion, sediment deposition, and marine life distribution, important for coastal planning and environmental management.</li>
+      <li><strong>Fishing:</strong> Tidal levels impact marine life behavior and locations, important for fishing activities.</li>
+    </ul>
+    <p>The "_ft" indicates measurements in feet, commonly used in the United States for distance and height.</p>
+  `;
+		break;
+	    case "lotusMinBWH_ft":
+		description = `
+     <h2><strong>lotusMinBWH_ft: Minimum breaking wave height at the beach in feet:</strong></h2>
+    <p>Defines the lowest height waves start to break, crucial for surfability and beach safety. Influenced by sea floor topography, wave energy, and tide levels, it varies by beach due to local conditions.</p>
+    <ul>
+      <li><strong>Breaking Wave Height:</strong> Height of a wave as it starts to break, critical for assessing surf conditions.</li>
+      <li><strong>Minimum Breaking Wave Height:</strong> Indicates the lowest height waves break, offering insights into potential surfing conditions and safety considerations.</li>
+      <li><strong>Measurement in Feet:</strong> Uses the imperial system, common in countries like the United States, providing direct wave height indication.</li>
+      <li><strong>At the Beach:</strong> Specifies measurement relevance to particular beach locations, where breaking wave heights can vary significantly.</li>
+    </ul>
+    <p>This metric helps assess beach conditions for surfing, shorebreak risk, and other recreational or safety considerations.</p>
+  `;
+		break;
+	    case "lotusMaxBWH_ft":
+		description = `
+     <h2><strong>lotusMaxBWH_ft: Maximum breaking wave height at the beach in feet:</strong></h2>
+    <p>Denotes the highest height waves are seen to break at specific beach locations, measured in feet. Essential for gauging potential maximum wave conditions, impacting surfing, safety, and coastal management.</p>
+    <ul>
+      <li><strong>Maximum Breaking Wave Height:</strong> The tallest height waves break, influenced by wind speed, swell direction, and seabed contours.</li>
+      <li><strong>Measurement in Feet:</strong> Height measured in feet, a standard unit in the United States, aiding surfers and coastal managers in planning and safety.</li>
+      <li><strong>At the Beach:</strong> Measurement specific to beach locations, where wave conditions vary greatly due to local topography and geographical factors.</li>
+    </ul>
+    <p>"lotusMaxBWH_ft" informs on the upper wave height limit at beaches, offering insights into extreme surfing conditions and coastal infrastructure considerations.</p>
+  `;
+		break;
+	    case "lotusSighPartX_mt":
+		description = `
+    <h2><strong>lotusSighPartX_mt: Significant wave height of swell partition X in meters:</strong></h2>
+    <p>Denotes the significant wave height within a specific swell partition, vital for marine forecasting. "LOTUS" is Surfline's model, "Sigh" represents "Significant Height", and "PartX" refers to individual swell systems affecting a location, with "X" as the partition number.</p>
+    <ul>
+      <li><strong>lotus:</strong> Surfline's forecast model.</li>
+      <li><strong>Sigh:</strong> Abbreviation for "Significant Height", indicating the average height of the highest third of waves.</li>
+      <li><strong>PartX:</strong> Denotes multiple swell partitions, with "X" specifying the partition number, allowing differentiation between swell systems.</li>
+      <li><strong>_mt:</strong> Measurement unit in meters, providing a standardized measure of wave heights.</li>
+    </ul>
+    <p>This metric is crucial for surfers and maritime operations, offering insights into wave energy and surf quality across different swell sources.</p>
+  `;
+		break;
+	    case "lotusTPPartX_sec":
+		description = `
+    <h2><strong>lotusTPPartX_sec: Peak period of swell partition X in seconds:</strong></h2>
+    <p>Key to surf forecasting, this indicates the time interval between successive waves in a swell's most energy-dense part, measured in seconds. The "TP" stands for "Peak Period," and "PartX" for a specific swell partition, with "X" denoting the partition number.</p>
+    <ul>
+      <li><strong>Shorter Peak Periods (5-8 seconds):</strong> Suggest locally generated wind swells, typically less powerful and choppier.</li>
+      <li><strong>Longer Peak Periods (12-20 seconds or more):</strong> Indicate swells from distant storms, characterized by more organized, powerful, and cleaner waves.</li>
+    </ul>
+    <p>This measurement is crucial for predicting wave size, energy, and surf quality, aiding in identifying optimal surfing conditions.</p>
+  `;
+		break;
+	    case "lotusPDirPartX_deg":
+		description = `
+    <h2><strong>lotusPDirPartX_deg: Compass direction of swell partition X in degrees:</strong></h2>
+    <p>Indicates the primary direction from which a swell partition originates, using degrees. "LotusPDir" likely refers to "Lotus Peak Direction," with "PartX" signifying individual swell partitions distinguished by origin, period, or direction.</p>
+    <ul>
+      <li><strong>_deg:</strong> Direction measured in degrees, adhering to compass conventions (North as 0/360, East as 90, South as 180, West as 270).</li>
+    </ul>
+    <p>This data is vital for predicting how swells interact with coastlines and underwater features, influencing wave characteristics and surfing conditions.</p>
+  `;
+		break;
+	    case "lotusSpreadPartX_deg":
+		description = `
+    <h2><strong>lotusSpreadPartX_deg: Spread of swell partition X in degrees:</strong></h2>
+    <p>Defines the range of directions from which waves in a swell partition are arriving, measured in degrees. A narrow spread indicates waves come from a uniform direction, producing consistent surf conditions. A wide spread suggests a broader range of directions, leading to mixed or chaotic sea states, impacting surf conditions and beach safety.</p>
+    <p>For example, a main direction of 270 degrees (west) with a 30-degree spread indicates waves moving primarily west but can vary from 255 (WSW) to 285 degrees (WNW).</p>
+  `;
+		break;
+		// Add more cases if needed
+	    }
+	    descriptionElement.innerHTML = description;
+	}
+	
+      </script>
+    </div>
+  </body>
+</html>
