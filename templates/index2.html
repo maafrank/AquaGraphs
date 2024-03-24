@@ -142,6 +142,14 @@
 	  <div id="swell-partitions-chart2"></div>
 	</div>
       </section>
+
+      <section id="big_chart">
+	<div>
+	  
+          <div id="big-chart1"></div>
+	  
+	</div>
+      </section>
       
       <section>
 	<h2>Date Range Filter</h2>
@@ -304,6 +312,12 @@
 	document.addEventListener("DOMContentLoaded", function(event) {
 	    var swellPartitionsSpec2 = {{ swell_partitions_chart_spec2 | tojson }};
 	    vegaEmbed('#swell-partitions-chart2', swellPartitionsSpec2, { "actions": false }).then(function(result) {
+	    }).catch(console.error);
+	});
+
+	document.addEventListener("DOMContentLoaded", function(event) {
+	    var bigChartSpec1 = {{ big_chart1 | tojson }};
+	    vegaEmbed('#big-chart1', bigChartSpec1, { "actions": false }).then(function(result) {
 	    }).catch(console.error);
 	});
 
