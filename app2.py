@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import datetime
 from pytz import timezone
-
+from scipy import stats
 
 
 #####################
@@ -52,6 +52,7 @@ def process_data(variable, aggregation_level, start_date=None, end_date=None):
     agg_dict = {
         'lotusMinBWH_ft': 'mean',
         'lotusMaxBWH_ft': 'mean',
+        'lotusSigh_mt' : 'mean',
     }
 
     if 'Part' in variable:
@@ -77,6 +78,7 @@ def get_x_axis_type(aggregation_level):
         return 'temporal'
     else:
         return 'nominal'
+    
 def generate_line_chart(aggregated_data, variable, aggregation_level):
     # Base chart configuration
     base = alt.Chart(aggregated_data).encode(
@@ -84,7 +86,7 @@ def generate_line_chart(aggregated_data, variable, aggregation_level):
     )
     
     if "Part" not in variable:
-        base = base.properties(width=800, height=400)
+        base = base.properties(width=900, height=600)
         # Standard line chart for non-partitioned data
         chart = base.mark_line().encode(
             y=alt.Y(f'{variable}:Q', title='Value'),
@@ -105,9 +107,7 @@ def generate_line_chart(aggregated_data, variable, aggregation_level):
                 tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'Value (Partition {i})')]
             )
             partition_charts.append(partition_chart)
-        
-        #chart = alt.layer(*partition_charts)  # Combine all partition charts into a single chart
-        
+                
         # Assuming we always have 6 charts ready to be displayed
         top_row = alt.hconcat(*partition_charts[:3])  # First 3 charts
         bottom_row = alt.hconcat(*partition_charts[3:])  # Last 3 charts
@@ -126,7 +126,7 @@ def generate_bar_chart(aggregated_data, variable, aggregation_level):
     )
     
     if "Part" not in variable:
-        base = base.properties(width=800, height=400)
+        base = base.properties(width=900, height=600)
         # Standard bar chart for non-partitioned data
         chart = base.mark_bar().encode(
             y=alt.Y(f'{variable}:Q', title='Value'),
@@ -147,9 +147,7 @@ def generate_bar_chart(aggregated_data, variable, aggregation_level):
                 tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'Value (Partition {i})')]
             )
             partition_charts.append(partition_chart)
-        
-        #chart = alt.layer(*partition_charts)  # Combine all partition charts into a single chart
-        
+                
         # Assuming we always have 6 charts ready to be displayed
         top_row = alt.hconcat(*partition_charts[:3])  # First 3 charts
         bottom_row = alt.hconcat(*partition_charts[3:])  # Last 3 charts
@@ -161,7 +159,6 @@ def generate_bar_chart(aggregated_data, variable, aggregation_level):
         
     return chart
 
-import altair as alt
 
 def generate_composite_line_chart(aggregated_data, user_variable, aggregation_level):
     base = alt.Chart(aggregated_data).encode(
@@ -177,7 +174,7 @@ def generate_composite_line_chart(aggregated_data, user_variable, aggregation_le
     )
     
     if "Part" not in user_variable:
-        base = base.properties(width=800, height=400)
+        base = base.properties(width=900, height=600)
         # User Variable Chart (non-partitioned)
         user_var_chart = base.mark_line(color='green').encode(
             y=alt.Y(f'{user_variable}:Q', title=f'{user_variable}'),
@@ -185,7 +182,7 @@ def generate_composite_line_chart(aggregated_data, user_variable, aggregation_le
         )
         chart = alt.layer(min_bwh, max_bwh, user_var_chart).resolve_scale(
             y='shared'
-        ).properties(width=800, height=400)
+        ).properties(width=900, height=600)
     else:
         base = base.properties(width=300, height=200)
 
@@ -224,7 +221,7 @@ def generate_composite_bar_chart(aggregated_data, user_variable, aggregation_lev
     )
     
     if "Part" not in user_variable:
-        base = base.properties(width=800, height=400)
+        base = base.properties(width=900, height=600)
         # User Variable Chart (non-partitioned)
         user_var_chart = base.mark_bar(color='green').encode(
             y=alt.Y(f'{user_variable}:Q', title=f'{user_variable}'),
@@ -232,7 +229,7 @@ def generate_composite_bar_chart(aggregated_data, user_variable, aggregation_lev
         )
         chart = alt.layer(min_bwh, max_bwh, user_var_chart).resolve_scale(
             y='shared'
-        ).properties(width=800, height=400)
+        ).properties(width=900, height=600)
     else:
         base = base.properties(width=300, height=200)
 
@@ -255,6 +252,275 @@ def generate_composite_bar_chart(aggregated_data, user_variable, aggregation_lev
         )
     
     return chart
+
+def generate_seasonal_chart():
+    variable = 'lotusMaxBWH_ft'
+    aggregation = 'Season_Year'
+    start_date = request.args.get('startDate', None)
+    end_date = request.args.get('endDate', None)
+
+    # Process the data
+    aggregated_data = process_data(variable, aggregation, start_date, end_date)
+
+    season_order = {'Winter': 0,'Spring': 1,'Summer': 2,'Fall': 3}
+
+    aggregated_data['season'] = aggregated_data['time_period'].str.extract(r'(Winter|Spring|Summer|Fall)')
+    aggregated_data['year'] = aggregated_data['time_period'].str.extract(r'(\d{4})').astype(int)
+    
+    aggregated_data['season_order'] = aggregated_data['season'].map(season_order)
+    aggregated_data.sort_values(by=['year', 'season_order'], inplace=True)
+
+    # Create the chart
+    chart = alt.Chart(aggregated_data).mark_bar().encode(
+        x=alt.X('time_period:N', title='Time Period', sort=list(aggregated_data['time_period'])),
+        y=alt.Y(f'{variable}:Q', title='Value'),
+        color=alt.Color('season:N', sort=list(season_order), legend=alt.Legend(title="Season")),
+        tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title='Value')]
+    ).properties(
+        width=900,
+        height=600
+    )
+    
+    return chart
+
+def generate_tide_influence_chart():
+    variable = 'tide_ft'
+    aggregation = 'Week'
+    start_date = request.args.get('startDate', None)
+    end_date = request.args.get('endDate', None)
+
+    # Process the data
+    aggregated_data = process_data(variable, aggregation, start_date, end_date)
+
+    base = alt.Chart(aggregated_data).encode(
+        alt.X('time_period:T', axis=alt.Axis(title='Time'))
+    )
+    
+    tide_line = base.mark_line(color='blue').encode(
+        alt.Y('tide_ft:Q', axis=alt.Axis(title='Tide Level (ft)'))
+    )
+    
+    wave_line = base.mark_line(color='red').encode(
+        alt.Y('lotusMaxBWH_ft:Q', axis=alt.Axis(title='Max Breaking Wave Height (ft)'))
+    )
+    
+    final_chart = alt.layer(tide_line, wave_line).resolve_scale(
+        y='independent'
+    ).properties(
+        width=900,
+        height=600
+    )
+
+    return final_chart
+
+def generate_swell_direction_chart():
+    variable = 'lotusPDirPartX_deg'
+    aggregation = 'Week'
+    start_date = request.args.get('startDate', None)
+    end_date = request.args.get('endDate', None)
+
+    # Process the data
+    aggregated_data = process_data(variable, aggregation, start_date, end_date)
+    direction_columns = [col for col in aggregated_data.columns if "Part" in col]
+    aggregated_data['average_swell_direction_deg'] = aggregated_data[direction_columns].mean(axis=1)
+
+    aggregated_data['wave_height'] = aggregated_data['lotusMaxBWH_ft']
+    
+    aggregated_data['direction_radians'] = np.deg2rad(aggregated_data['average_swell_direction_deg'])
+    
+    # Create a base chart
+    base = alt.Chart(aggregated_data).encode(
+        theta=alt.Theta('direction_radians:Q', stack=True), 
+        radius=alt.Radius('wave_height:Q', scale=alt.Scale(type='sqrt', zero=True, rangeMin=20)), 
+        color=alt.Color('wave_height:Q', scale=alt.Scale(scheme="inferno")),  
+        tooltip=[
+            alt.Tooltip('average_swell_direction_deg:N', title='Direction (degrees)'),
+            alt.Tooltip('wave_height:Q', title='Wave Height (ft)')
+        ]
+    )
+    
+    chart = base.mark_arc(innerRadius=10).properties(
+        width=390,
+        height=390
+    )
+    
+    return chart
+
+def generate_peak_period_chart():
+    variable = 'lotusTPPartX_sec'
+    aggregation = 'Week'
+    start_date = request.args.get('startDate', None)
+    end_date = request.args.get('endDate', None)
+
+    # Process the data
+    aggregated_data = process_data(variable, aggregation, start_date, end_date)
+    direction_columns = [col for col in aggregated_data.columns if "Part" in col]
+    aggregated_data['average_peak_period'] = aggregated_data[direction_columns].max(axis=1)
+
+    min_peak_period = aggregated_data['average_peak_period'].min()
+    max_peak_period = aggregated_data['average_peak_period'].max()
+
+    base_chart = alt.Chart(aggregated_data).properties(
+        width=900,
+        height=600,
+        title='Relationship between Average Peak Period and Wave Height'
+    )
+    
+    # Define the scatter plot.
+    scatter_chart = base_chart.mark_point().encode(
+        x=alt.X('average_peak_period', title='Average Peak Period (s)', scale=alt.Scale(domain=(min_peak_period, max_peak_period))),
+        y=alt.Y('lotusMaxBWH_ft', title='Max Breaking Wave Height (ft)'),
+        tooltip=['time_period', 'average_peak_period', 'lotusMaxBWH_ft']
+    )
+
+    # Calculate the regression line manually
+    slope, intercept, r_value, p_value, std_err = stats.linregress(
+        aggregated_data['average_peak_period'],
+        aggregated_data['lotusMaxBWH_ft']
+    )
+    
+    # Create a new DataFrame for the regression line
+    regression_df = pd.DataFrame({
+        'average_peak_period': aggregated_data['average_peak_period'],
+        'regression_line': (aggregated_data['average_peak_period'] * slope) + intercept
+    })
+    
+    # Create an Altair chart for the regression line
+    regression_chart = alt.Chart(regression_df).mark_line(color='firebrick').encode(
+        x='average_peak_period',
+        y='regression_line'
+    )
+    
+    # Combine the scatter chart with the regression line chart
+    final_chart = scatter_chart + regression_chart
+    
+    # Return the final combined chart
+    return final_chart
+
+def generate_peak_period_line_chart():
+    variable = 'lotusTPPartX_sec'
+    aggregation = 'Month'
+    start_date = request.args.get('startDate', None)
+    end_date = request.args.get('endDate', None)
+
+    # Process the data
+    aggregated_data = process_data(variable, aggregation, start_date, end_date)
+    direction_columns = [col for col in aggregated_data.columns if "Part" in col]
+    aggregated_data['average_peak_period'] = aggregated_data[direction_columns].max(axis=1)
+
+    min_peak_period = aggregated_data['average_peak_period'].min()
+    max_peak_period = aggregated_data['average_peak_period'].max()
+
+    line_chart = alt.Chart(aggregated_data).mark_line().encode(
+        x=alt.X('time_period:T', title='Time Period'),
+        y=alt.Y('average_peak_period:Q', title='Average Peak Period (seconds)' ,scale=alt.Scale(domain=(min_peak_period, max_peak_period))), 
+        tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('average_peak_period:Q', title='Average Peak Period')]
+    ).properties(
+        width=900,
+        height=600,
+        title='Average Peak Period Over Time'
+    )
+    
+    return line_chart
+
+
+def generate_swell_partitions_chart():
+    variable = 'lotusSighPartX_mt'
+    aggregation = 'Month'
+    start_date = request.args.get('startDate', None)
+    end_date = request.args.get('endDate', None)
+
+    aggregated_data = process_data(variable, aggregation, start_date, end_date)
+    
+    # Base chart configuration
+    base = alt.Chart(aggregated_data).encode(
+        x=alt.X('time_period', type=get_x_axis_type(aggregation), title='Time Period'),
+    ).properties(width=300, height=200)
+
+    global_min = aggregated_data[[variable.replace("X", str(i)) for i in range(6)]].min().min()
+    global_max = aggregated_data[[variable.replace("X", str(i)) for i in range(6)]].max().max()
+    
+    # Handling partitioned variables, assuming variable format "PartX" where X is the partition number
+    partition_charts = []
+    for i in range(6):  # For partitions 0-5
+        partition_variable = variable.replace("X",f"{i}")
+        partition_chart = base.mark_line().encode(
+            y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'Partition {i}'),
+            tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'Partition {i}')]
+        )
+        partition_charts.append(partition_chart)
+        
+    # Assuming we always have 6 charts ready to be displayed
+    top_row = alt.hconcat(*partition_charts[:3])  # First 3 charts
+    bottom_row = alt.hconcat(*partition_charts[3:])  # Last 3 charts
+    
+    chart = alt.vconcat(top_row, bottom_row).resolve_scale(
+        x='shared',
+        y='shared'
+    )
+    
+    return chart
+
+
+def generate_swell_partitions_chart2():
+    variable = 'lotusSighPartX_mt'
+    aggregation = 'Month'
+    start_date = request.args.get('startDate', None)
+    end_date = request.args.get('endDate', None)
+
+    aggregated_data = process_data(variable, aggregation, start_date, end_date)
+    
+    # Calculate the max and sum of partitions
+    partition_columns = [variable.replace("X", str(i)) for i in range(6)]
+
+    weights = [1, 0.6, 0.5, 0.4, 0.3, 0.2]
+    aggregated_data['sum_of_partitions'] = sum(
+        aggregated_data[variable.replace("X", str(i))] * weight for i, weight in enumerate(weights)
+    )
+    
+    min_value = min(aggregated_data['sum_of_partitions'].min(), aggregated_data['lotusSigh_mt'].min())
+    max_value = max(aggregated_data['sum_of_partitions'].max(), aggregated_data['lotusSigh_mt'].max())
+    padding = (max_value - min_value) * 0.05
+    max_value += padding
+    min_value -= padding
+
+    # Base chart configuration
+    base = alt.Chart(aggregated_data).encode(
+        x=alt.X('time_period:T', title='Time Period'),
+        y=alt.Y('sum_of_partitions:Q', scale=alt.Scale(domain=(min_value, max_value)), title='Sum of Partitions (meters)'),
+    ).properties(
+        width=900,
+        height=600,
+        title='Weighted Sum of Wave Partitions vs. Total Significant Wave Height'
+    )
+    
+    # Create a line chart with dots for sum of partitions
+    sum_chart = base.mark_line(color='green', strokeWidth=3).encode(
+        y=alt.Y('sum_of_partitions:Q', title='Sum of Partitions (meters)', scale=alt.Scale(domain=(min_value, max_value))),
+        tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('sum_of_partitions:Q', title='Sum of Partitions')]
+    )
+    sum_points = base.mark_point(color='green', size=50).encode(
+        y=alt.Y('sum_of_partitions:Q', scale=alt.Scale(domain=(min_value, max_value))),
+        tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('sum_of_partitions:Q', title='Sum of Partitions')]
+    )
+    
+    # Create a line chart with dots for total significant wave height
+    total_wave_height_chart = base.mark_line(color='blue', strokeWidth=3).encode(
+        y=alt.Y('lotusSigh_mt:Q', title='Total Significant Wave Height (meters)', scale=alt.Scale(domain=(min_value, max_value))),
+        tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('lotusSigh_mt:Q', title='Total Significant Wave Height')]
+    )
+    total_points = base.mark_point(color='blue', size=50).encode(
+        y=alt.Y('lotusSigh_mt:Q', scale=alt.Scale(domain=(min_value, max_value))),
+        tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('lotusSigh_mt:Q', title='Total Significant Wave Height')]
+    )
+    
+    # Combine the line charts and point charts
+    combined_chart = alt.layer(sum_chart, sum_points, total_wave_height_chart, total_points).resolve_scale(
+        y='shared'
+    )
+    
+    # Return the combined chart
+    return combined_chart
 
 app = Flask(__name__)
 
@@ -294,155 +560,25 @@ def update_composite_chart():
     return jsonify(chart_spec)
 
 
-
-###############################################################################################################
-
-#####################
-## Data Processing ##
-#####################
-
-MorroBayHeights = pd.read_csv("data/MorroBayHeights.csv")
-MorroBayHeights["hour"]= list(map(lambda x: datetime.datetime.fromtimestamp(x).astimezone(timezone('US/Pacific')).time().hour, MorroBayHeights["datetime"]))
-MorroBayHeights["year"]= list(map(lambda x: datetime.datetime.fromtimestamp(x).astimezone(timezone('US/Pacific')).year, MorroBayHeights["datetime"]))
-# More than 5000 rows
-alt.data_transformers.disable_max_rows()
-
-#####################################
-## Wave Direction and Swell Height ##
-#####################################
-
-##Scatter Plot
-def wave_direction_height(partition_num, df = MorroBayHeights):
-    edit_df = df[[f"lotusSighPart{partition_num}_mt", f"lotusPDirPart{partition_num}_deg"]]
-    return alt.Chart(edit_df, title = f"Wave Direction vs. Height for Partition {partition_num}").mark_circle(size=60).encode(
-    x=alt.X(f"lotusPDirPart{partition_num}_deg", title = "Partition Direction"),
-    y=alt.Y(f"lotusSighPart{partition_num}_mt", title = "Partition Height")
-    ).properties(
-    width=250,
-    height=250)
-
-@app.route('/updatevis1', methods=['GET'])
-def updatevis1():
-    vis3_1 = []
-    for i in np.arange(6):
-        vis3_1.append(wave_direction_height(i, MorroBayHeights))
-    return alt.vconcat(alt.hconcat(vis3_1[0], vis3_1[1], vis3_1[2]), alt.hconcat(vis3_1[3], vis3_1[4], vis3_1[5])).to_json()
-    
-###############################
-## Wave Direction in a Month ##
-###############################
-
-##Iteration 1
-def wave_dir_month(year, month, df=MorroBayHeights):
-    df["date"] = pd.to_datetime(df["datetime_local"].apply(lambda x: datetime.datetime.strptime(x[:10], "%Y-%m-%d")))
-    month_data = df.loc[(df['date'].dt.month==month) & (df['date'].dt.year==year)]
-    agg_month_data = month_data.groupby('date')[["lotusPDirPart0_deg", "lotusPDirPart1_deg", "lotusPDirPart2_deg", "lotusPDirPart3_deg", "lotusPDirPart4_deg", "lotusPDirPart5_deg"]].mean().reset_index()
-    agg_month_data_melt = agg_month_data.melt(id_vars=["date"], value_vars=["lotusPDirPart0_deg", "lotusPDirPart1_deg", "lotusPDirPart2_deg", "lotusPDirPart3_deg", "lotusPDirPart4_deg", "lotusPDirPart5_deg"], var_name = "Partition", value_name = "Direction")
-    
-    base = alt.Chart(agg_month_data_melt, title = f"Wave direction in month {month} of year {year}").mark_line().encode(
-        x="date",
-        y="Direction", color = "Partition")
-    
-    return base
-
-@app.route('/updatevis2_1', methods=['GET'])
-def updatevis2_1():
-    row1 = alt.hconcat(wave_dir_month(2019, 10, MorroBayHeights), wave_dir_month(2020, 10, MorroBayHeights))
-    row2 = alt.hconcat(wave_dir_month(2021, 10, MorroBayHeights), wave_dir_month(2022, 10, MorroBayHeights))
-    return alt.vconcat(row1, row2).to_json()
-
-
-##Iteration 2
-def wave_dir_month2(month, partition, df=MorroBayHeights):
-    df["date"] = pd.to_datetime(df["datetime_local"].apply(lambda x: datetime.datetime.strptime(x[:10], "%Y-%m-%d")))
-    month_data = df.loc[(df['date'].dt.month==month) & (df['date'].dt.year!=2019)]
-    agg_month_data = month_data.groupby('date')[[f"lotusPDirPart{partition}_deg"]].mean().reset_index()
-    agg_month_data["year"] = agg_month_data['date'].dt.year
-    agg_month_data["month_day"] = agg_month_data["date"].dt.strftime('%m-%d')
-    base = alt.Chart(agg_month_data, title = f"Wave direction in month {month} of partition {partition}").mark_line().encode(
-        x="month_day",
-        y=f"lotusPDirPart{partition}_deg", color = "year").properties(
-    width=350,
-    height=250)
-    
-    return base
-
-@app.route('/updatevis2_2', methods=['GET'])
-def updatevis2_2():
-    row1 = alt.hconcat(wave_dir_month2(10, 0, MorroBayHeights), wave_dir_month2(10, 1, MorroBayHeights), wave_dir_month2(10, 2, MorroBayHeights))
-    row2 = alt.hconcat(wave_dir_month2(10, 3, MorroBayHeights), wave_dir_month2(10, 4, MorroBayHeights), wave_dir_month2(10, 5, MorroBayHeights))
-    return alt.vconcat(row1, row2).to_json()
-
-#Iteration 3
-def wave_dir_month3(year, month, partition, df=MorroBayHeights):
-    edit_df = df[["datetime_local", f"lotusPDirPart{partition}_deg", "hour"]]
-    edit_df["date"] = pd.to_datetime(edit_df["datetime_local"].apply(lambda x: datetime.datetime.strptime(x[:10], "%Y-%m-%d")))
-    month_data = edit_df.loc[(edit_df['date'].dt.month==month) & (edit_df['date'].dt.year==year)]
-    month_data["month_day"] = month_data["date"].dt.strftime('%m-%d')
-    base = alt.Chart(month_data[["month_day", "hour", f"lotusPDirPart{partition}_deg"]], title = f"Wave direction in year {year} month {month} of partition {partition}").mark_rect().encode(
-    x='month_day:O',
-    y='hour:O',
-    color=f"lotusPDirPart{partition}_deg:Q").properties(
-    width=350,
-    height=250)
-    return base
-
-@app.route('/updatevis2_3', methods=['GET'])
-def updatevis2_3():
-    row1 = alt.hconcat(wave_dir_month3(2020, 10, 0, MorroBayHeights), wave_dir_month3(2021, 10, 0, MorroBayHeights))
-    row2 = alt.hconcat(wave_dir_month3(2022, 10, 0, MorroBayHeights), wave_dir_month3(2023, 10, 0, MorroBayHeights))
-    return alt.vconcat(row1, row2).to_json()
-
-########################################
-## Wave Direction, Period, and Height ##
-########################################
-#Convert direction in degrees to north, south, east, west
-def compass(degree):
-    if degree <45:
-        return "North"
-    elif degree <135:
-        return "East"
-    elif degree < 225:
-        return "South"
-    elif degree < 315:
-        return "West"
-    else:
-        return "North"
-    
-#Iteration 1
-def wave_height_period(partition_num, df, compass_direction = None):
-    #interested in lotusTP and lotusPDir variables
-
-    alt.data_transformers.disable_max_rows()
-    direction = df[f"lotusPDirPart{partition_num}_deg"].apply(lambda x: compass(x))
-    df["Direction"] = direction
-    edit_df = df[[f"lotusTPPart{partition_num}_sec", f"lotusSighPart{partition_num}_mt", "Direction"]]
-    if compass_direction != None:
-        edit_df = edit_df[edit_df["Direction"] == compass_direction]
-    return alt.Chart(edit_df, title = f"Period vs Height for Partition {partition_num}").mark_circle(size=60).encode(
-    x=alt.X(f"lotusTPPart{partition_num}_sec", title = "Partition Period"),
-    y=alt.Y(f"lotusSighPart{partition_num}_mt", title = "Wave Height"),
-    color = "Direction"
-    ).properties(
-    width=250,
-    height=250)
-    
-@app.route('/updatevis3_1', methods=['GET'])
-def updatevis3_1():
-    return wave_height_period(0, MorroBayHeights).to_json()
-
-#Iteration 2
-
-@app.route('/updatevis3_2', methods=['GET'])
-def updatevis3_2():
-    row1 = alt.hconcat(wave_height_period(0, MorroBayHeights, "North"), wave_height_period(0, MorroBayHeights, "South"))
-    row2 = alt.hconcat(wave_height_period(0, MorroBayHeights, "East"), wave_height_period(0, MorroBayHeights, "West"))
-    return alt.vconcat(row1, row2).to_json()
-
-###############################################################################################################
-
 @app.route('/')
 def home():
+
+    seasonal_chart_spec = generate_seasonal_chart().to_dict()
+
+    tide_influence_chart_spec = generate_tide_influence_chart().to_dict()
+
+    swell_direction_chart_spec = generate_swell_direction_chart().to_dict()
+    
+    peak_period_line_chart_spec = generate_peak_period_line_chart().to_dict()
+    
+    peak_period_chart_spec = generate_peak_period_chart().to_dict()
+
+    swell_partitions_chart_spec = generate_swell_partitions_chart().to_dict()
+
+    swell_partitions_chart_spec2 = generate_swell_partitions_chart2().to_dict()
+
+    # Show vars of top 3 largest waves and smallest waves and what the conditions were
+    
     # Prepare data for Chart 1
     variable1 = request.args.get('variable1', default='lotusSigh_mt')
     aggregation1 = request.args.get('aggregation1', default='Month')
@@ -463,7 +599,14 @@ def home():
 
     # Add more charts as needed
 
-    return render_template('index.html',
+    return render_template('index2.html',
+                           seasonal_chart_spec=seasonal_chart_spec,
+                           tide_influence_chart_spec=tide_influence_chart_spec,
+                           swell_direction_chart_spec=swell_direction_chart_spec,
+                           peak_period_line_chart_spec=peak_period_line_chart_spec,
+                           peak_period_chart_spec=peak_period_chart_spec,
+                           swell_partitions_chart_spec=swell_partitions_chart_spec,
+                           swell_partitions_chart_spec2=swell_partitions_chart_spec2,
                            chart1_spec=chart1_spec,
                            chart2_spec=chart2_spec,
                            chart3_spec=chart2_spec,
