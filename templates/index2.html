@@ -145,8 +145,39 @@
 
       <section id="big_chart">
 	<div>
-	  
+	  <h2>Comparative Analysis of Wave Conditions</h2>
+	  <p>
+	    This section delves into the comparison of conditions during the top highest and smallest wave events. 
+	    In the provided visualizations, we track several variables over time to discern patterns and influences.
+	  </p>
+	  <p>
+	    The blue line denotes wave height, indicating the vertical extent of waves during specific periods. 
+	    In contrast, the orange line reflects tide levels, providing insight into the gravitational pull effects 
+	    of the sun and moon during the same intervals.
+	  </p>
+	  <p>
+	    Each point's color corresponds to the swell direction, with distinct colors representing different compass directions, 
+	    such as North (N), Northeast (NE), and so on. The size of each dot correlates with the wave period, measured in seconds, 
+	    where larger dots signify longer periods. This confluence of factors — wave height, tide level, swell direction, and 
+	    wave period — intertwines to shape the surfing conditions at any given moment.
+	  </p>
+
+	  <h2>Insights from Wave Data</h2>
+	  <p>
+	    Each graph depicted represents a detailed snapshot of wave activity over the course of a week, providing hourly data that uncovers the rhythms of the sea. Through careful observation, we can glean several key insights:
+	  </p>
+	  <ul>
+	    <li>The <strong>largest waves</strong> tend to occur between December and January, suggesting a seasonal pattern where winter storms contribute to more significant wave formations.</li>
+	    <li>Conversely, the <strong>smallest waves</strong> are observed between July and November, a period typically associated with calmer ocean conditions in this region.</li>
+	    <li>A notable trend is that the largest waves often coincide with swells coming from the west. Given Morro Bay's location on the west coast, these swells travel unimpeded across the vast expanse of the Pacific, gathering size and power.</li>
+	    <li>The <strong>influence of tide</strong> on wave height appears minimal, indicating that other factors may play a more dominant role in wave formation during these peak events.</li>
+	    <li>The <strong>peak period</strong> data, representing the time between successive waves, shows only a slight correlation with wave height, although larger waves do have a tendency to have a longer peak period.</li>
+	  </ul>
+	  <p>
+	    These observations highlight the complexity of oceanic behavior and the multitude of factors that contribute to the surfing conditions experienced at Morro Bay.
+	  </p>
           <div id="big-chart1"></div>
+	  <div id="small-chart1"></div>
 	  
 	</div>
       </section>
@@ -196,7 +227,7 @@
 	<div id="chart1"></div>
       </section>
       
-      <!-- Chart 2 Controls -->
+      <!-- Chart 2 Controls 
       <section>
 	<h2>Discover What Variables Impact Breaking Wave Height</h2>
 	<p>Select a variable alongside Minimum and Maximum breaking wave height to analyze their relationships.</p>
@@ -216,7 +247,6 @@
 	    <option value="lotusTPPartX_sec">lotusTPPartX_sec</option>
 	    <option value="lotusPDirPartX_deg">lotusPDirPartX_deg</option>
 	    <option value="lotusSpreadPartX_deg">lotusSpreadPartX_deg</option> 
-            <!-- Add more options as needed -->
 	  </select>
 	  
 	  <select id="aggregation2" onchange="loadCompositeChartData()">Update Chart 2>
@@ -226,14 +256,14 @@
 	    <option value="Season">Season</option>
 	    <option value="Season_Year">Season_Year</option>
 	    <option value="Year">Year</option>
-            <!-- Add more options as needed -->
 	  </select>
 	  
 	</div>
 	<div id="chart2"></div>
       </section>
+      -->
       
-      <!-- Chart 3 Controls -->
+      <!-- Chart 3 Controls 
       <section>
 	<h2>Chart 3: What Makes Good Surf Conditions at Morro Bay</h2>
 	<p>Here we look at ideal conditions for surf at morro bay.</p>
@@ -253,7 +283,6 @@
 	    <option value="lotusTPPartX_sec">lotusTPPartX_sec</option>
 	    <option value="lotusPDirPartX_deg">lotusPDirPartX_deg</option>
 	    <option value="lotusSpreadPartX_deg">lotusSpreadPartX_deg</option>
-            <!-- Add more options as needed -->
 	  </select>
 	  
 	  <select id="aggregation3" onchange="loadChartData('3')">Update Chart 3>
@@ -263,13 +292,12 @@
 	    <option value="Season">Season</option>
 	    <option value="Season_Year">Season_Year</option>
 	    <option value="Year">Year</option>
-            <!-- Add more options as needed -->
 	  </select>
 	  
 	</div>
 	<div id="chart3"></div>
       </section>
-      <!-- Additional sections and charts as needed -->
+      -->
       
       <script>
 
@@ -318,6 +346,12 @@
 	document.addEventListener("DOMContentLoaded", function(event) {
 	    var bigChartSpec1 = {{ big_chart1 | tojson }};
 	    vegaEmbed('#big-chart1', bigChartSpec1, { "actions": false }).then(function(result) {
+	    }).catch(console.error);
+	});
+
+	document.addEventListener("DOMContentLoaded", function(event) {
+	    var smallChartSpec1 = {{ small_chart1 | tojson }};
+	    vegaEmbed('#small-chart1', smallChartSpec1, { "actions": false }).then(function(result) {
 	    }).catch(console.error);
 	});
 

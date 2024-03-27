@@ -7,10 +7,12 @@ from pytz import timezone
 from scipy import stats
 
 
+
 #####################
 ## Data Processing ##
 #####################
 def process_data(variable, aggregation_level, start_date=None, end_date=None):
+
     data = pd.read_csv('data/MorroBayHeights.csv')
     data['datetime'] = pd.to_datetime(data['datetime'], unit='s')
     
@@ -555,9 +557,9 @@ def generate_complex_chart(wave_set, tide, swell_dir, peak_period):
     merged_data['compass_direction'] = merged_data['average_swell_dir_swell'].apply(degrees_to_compass)
     
     swell_color_scale = alt.Scale(domain=['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'],
-                                  range=['purple', 'orange', 'teal', 'brown', 'red', 'green', 'blue', 'yellow'])
+                                  range=['purple', 'orange', 'yellow', 'teal', 'brown', 'red', 'blue', 'green'])
 
-    size_scale = alt.Scale(domain=[0, 20],  # Assuming the peak period goes from 0 to 20 seconds
+    size_scale = alt.Scale(domain=[15, 25],  # Assuming the peak period goes from 0 to 20 seconds
                            range=[10, 200])  # Size range from small to large
 
     # Chart for Tide levels
@@ -591,8 +593,8 @@ def generate_complex_chart(wave_set, tide, swell_dir, peak_period):
         y='shared'
     ).properties(
         title='Wave Height and Tide Over Time with Swell Direction and Peak Period',
-        width=800,
-        height=400
+        width=500,
+        height=300
     )
 
     return combined_chart
@@ -634,13 +636,47 @@ def generate_top_biggest_waves():
     chart2 = generate_complex_chart(wave_set2, wave_set2_tide, wave_set2_swell_dir, wave_set2_peak_period)
     chart3 = generate_complex_chart(wave_set3, wave_set3_tide, wave_set3_swell_dir, wave_set3_peak_period)
     
-    return chart3 #, chart2, chart3
+    return chart1 | chart2 #| chart3
 
 def generate_top_smallest_waves():
-    aggregated_data = process_data('lotusMaxBWH_ft', 'Week', None, None)
-    top_waves = aggregated_data.nsmallest(5, 'lotusMaxBWH_ft')
+    aggregated_data = process_data('lotusMinBWH_ft', 'Week', None, None)
 
-    return top_waves
+    # Use this to manually look at dates that have small waves
+    top_waves = aggregated_data.nsmallest(5, 'lotusMinBWH_ft')
+
+    print(top_waves)
+
+    wave_set1 = process_data('lotusMaxBWH_ft', 'Hour', '2021-07-26', '2021-08-01')
+    wave_set2 = process_data('lotusMaxBWH_ft', 'Hour', '2019-11-04', '2019-11-11')
+    wave_set3 = process_data('lotusMaxBWH_ft', 'Hour', '2022-07-25', '2022-08-01')
+
+    wave_set1_tide = process_data('tide_ft', 'Hour', '2021-07-26', '2021-08-01')
+    wave_set2_tide = process_data('tide_ft', 'Hour', '2019-11-04', '2019-11-11')
+    wave_set3_tide = process_data('tide_ft', 'Hour', '2022-07-25', '2022-08-01')
+
+    wave_set1_swell_dir = process_data('lotusPDirPartX_deg', 'Hour', '2021-07-26', '2021-08-01')
+    wave_set2_swell_dir = process_data('lotusPDirPartX_deg', 'Hour', '2019-11-04', '2019-11-11')
+    wave_set3_swell_dir = process_data('lotusPDirPartX_deg', 'Hour', '2022-07-25', '2022-08-01')
+
+    columns = [col for col in wave_set1_swell_dir.columns if "Part" in col]
+    wave_set1_swell_dir['average_swell_dir'] = wave_set1_swell_dir[columns].max(axis=1)
+    wave_set2_swell_dir['average_swell_dir'] = wave_set2_swell_dir[columns].max(axis=1)
+    wave_set3_swell_dir['average_swell_dir'] = wave_set3_swell_dir[columns].max(axis=1)
+
+    wave_set1_peak_period = process_data('lotusTPPartX_sec', 'Hour', '2021-07-26', '2021-08-01')
+    wave_set2_peak_period = process_data('lotusTPPartX_sec', 'Hour', '2019-11-04', '2019-11-11')
+    wave_set3_peak_period = process_data('lotusTPPartX_sec', 'Hour', '2022-07-25', '2022-08-01')
+
+    columns = [col for col in wave_set1_peak_period.columns if "Part" in col]
+    wave_set1_peak_period['average_peak_period'] = wave_set1_peak_period[columns].max(axis=1)
+    wave_set2_peak_period['average_peak_period'] = wave_set2_peak_period[columns].max(axis=1)
+    wave_set3_peak_period['average_peak_period'] = wave_set3_peak_period[columns].max(axis=1)
+
+    chart1 = generate_complex_chart(wave_set1, wave_set1_tide, wave_set1_swell_dir, wave_set1_peak_period)
+    chart2 = generate_complex_chart(wave_set2, wave_set2_tide, wave_set2_swell_dir, wave_set2_peak_period)
+    chart3 = generate_complex_chart(wave_set3, wave_set3_tide, wave_set3_swell_dir, wave_set3_peak_period)
+    
+    return chart1 | chart2 #| chart3
 
 app = Flask(__name__)
 
@@ -699,6 +735,8 @@ def home():
 
     big_chart1 = generate_top_biggest_waves().to_dict()
 
+    small_chart1 = generate_top_smallest_waves().to_dict()
+
     # Show vars of top 3 largest waves and smallest waves and what the conditions were
     
     # Prepare data for Chart 1
@@ -730,6 +768,7 @@ def home():
                            swell_partitions_chart_spec=swell_partitions_chart_spec,
                            swell_partitions_chart_spec2=swell_partitions_chart_spec2,
                            big_chart1=big_chart1,
+                           small_chart1=small_chart1,
                            chart1_spec=chart1_spec,
                            chart2_spec=chart2_spec,
                            chart3_spec=chart2_spec,
