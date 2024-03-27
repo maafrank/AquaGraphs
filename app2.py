@@ -78,7 +78,7 @@ def process_data(variable, aggregation_level, start_date=None, end_date=None):
 ## Generate Chart ##
 ####################
 def get_x_axis_type(aggregation_level):
-    if aggregation_level in ['Day', 'Week', 'Month', 'Year']:
+    if aggregation_level in ['Hour', 'Day', 'Week', 'Month', 'Year']:
         return 'temporal'
     else:
         return 'nominal'
@@ -90,14 +90,14 @@ def generate_line_chart(aggregated_data, variable, aggregation_level):
     )
     
     if "Part" not in variable:
-        base = base.properties(width=900, height=600)
+        base = base.properties(width=500, height=300)
         # Standard line chart for non-partitioned data
         chart = base.mark_line().encode(
-            y=alt.Y(f'{variable}:Q', title='Value'),
-            tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title='Value')]
+            y=alt.Y(f'{variable}:Q', title=f'{variable}'),
+            tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title=f'{variable}')]
         )
     else:
-        base = base.properties(width=300, height=200)
+        base = base.properties(width=150, height=100)
 
         global_min = aggregated_data[[variable.replace("X", str(i)) for i in range(6)]].min().min()
         global_max = aggregated_data[[variable.replace("X", str(i)) for i in range(6)]].max().max()
@@ -107,8 +107,8 @@ def generate_line_chart(aggregated_data, variable, aggregation_level):
         for i in range(6):  # For partitions 0-5
             partition_variable = variable.replace("X",f"{i}")
             partition_chart = base.mark_line().encode(
-                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'Value (Partition {i})'),
-                tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'Value (Partition {i})')]
+                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'{partition_variable} (Partition {i})'),
+                tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'{partition_variable} (Partition {i})')]
             )
             partition_charts.append(partition_chart)
                 
@@ -130,14 +130,14 @@ def generate_bar_chart(aggregated_data, variable, aggregation_level):
     )
     
     if "Part" not in variable:
-        base = base.properties(width=900, height=600)
+        base = base.properties(width=500, height=300)
         # Standard bar chart for non-partitioned data
         chart = base.mark_bar().encode(
-            y=alt.Y(f'{variable}:Q', title='Value'),
-            tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title='Value')]
+            y=alt.Y(f'{variable}:Q', title=f'{variable}'),
+            tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title=f'{variable}')]
         )
     else:
-        base = base.properties(width=300, height=200)
+        base = base.properties(width=150, height=100)
 
         global_min = aggregated_data[[variable.replace("X", str(i)) for i in range(6)]].min().min()
         global_max = aggregated_data[[variable.replace("X", str(i)) for i in range(6)]].max().max()
@@ -147,8 +147,8 @@ def generate_bar_chart(aggregated_data, variable, aggregation_level):
         for i in range(6):  # For partitions 0-5
             partition_variable = variable.replace("X",f"{i}")
             partition_chart = base.mark_bar().encode(
-                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'Value (Partition {i})'),
-                tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'Value (Partition {i})')]
+                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'{partition_variable} (Partition {i})'),
+                tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'{partition_variable} (Partition {i})')]
             )
             partition_charts.append(partition_chart)
                 
@@ -163,99 +163,86 @@ def generate_bar_chart(aggregated_data, variable, aggregation_level):
         
     return chart
 
-
-def generate_composite_line_chart(aggregated_data, user_variable, aggregation_level):
+def generate_scatter_chart(aggregated_data, variable, aggregation_level):
+    # Base chart configuration
     base = alt.Chart(aggregated_data).encode(
-        x=alt.X('time_period', type=get_x_axis_type(aggregation_level), title='Time Period')
+        x=alt.X('time_period', type=get_x_axis_type(aggregation_level), title='Time Period'),
     )
     
-    # Min and Max BWH Charts (always included)
-    min_bwh = base.mark_line(color='blue').encode(y=alt.Y('lotusMinBWH_ft:Q', title='Breaking Wave Height (ft)'),
-        tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip('lotusMinBWH_ft:Q', title='Min Breaking Wave Height')]
-    )
-    max_bwh = base.mark_line(color='red').encode(y=alt.Y('lotusMaxBWH_ft:Q', title='Max Breaking Wave Height (ft)'),
-        tooltip=[alt.Tooltip('lotusMaxBWH_ft:Q', title='Max Breaking Wave Height')]
-    )
-    
-    if "Part" not in user_variable:
-        base = base.properties(width=900, height=600)
-        # User Variable Chart (non-partitioned)
-        user_var_chart = base.mark_line(color='green').encode(
-            y=alt.Y(f'{user_variable}:Q', title=f'{user_variable}'),
-            tooltip=[alt.Tooltip(f'{user_variable}:Q', title=f'{user_variable}')]
+    if "Part" not in variable:
+        base = base.properties(width=500, height=300)
+        # Standard point chart for non-partitioned data
+        chart = base.mark_point().encode(
+            y=alt.Y(f'{variable}:Q', title=f'{variable}'),
+            tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title=f'{variable}')]
         )
-        chart = alt.layer(min_bwh, max_bwh, user_var_chart).resolve_scale(
-            y='shared'
-        ).properties(width=900, height=600)
     else:
-        base = base.properties(width=300, height=200)
+        base = base.properties(width=150, height=100)
 
-        charts = []
-        for i in range(6):
-            partition_variable = f'{user_variable.replace("X", str(i))}'
-            partition_chart = base.mark_line().encode(
-                y=alt.Y(f'{partition_variable}:Q', title=f'Value (Partition {i})'),
-                tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'Value (Partition {i})')]
+        global_min = aggregated_data[[variable.replace("X", str(i)) for i in range(6)]].min().min()
+        global_max = aggregated_data[[variable.replace("X", str(i)) for i in range(6)]].max().max()
+
+        # Handling partitioned variables, assuming variable format "PartX" where X is the partition number
+        partition_charts = []
+        for i in range(6):  # For partitions 0-5
+            partition_variable = variable.replace("X",f"{i}")
+            partition_chart = base.mark_point().encode(
+                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'{partition_variable} (Partition {i})'),
+                tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'{partition_variable} (Partition {i})')]
             )
-            chart = alt.layer(min_bwh, max_bwh, partition_chart)
-            charts.append(chart)
-        
-        top_row = alt.hconcat(*charts[:3])  
-        bottom_row = alt.hconcat(*charts[3:])
+            partition_charts.append(partition_chart)
+                
+        # Assuming we always have 6 charts ready to be displayed
+        top_row = alt.hconcat(*partition_charts[:3])  # First 3 charts
+        bottom_row = alt.hconcat(*partition_charts[3:])  # Last 3 charts
 
         chart = alt.vconcat(top_row, bottom_row).resolve_scale(
             x='shared',
             y='shared'
         )
-    
+        
     return chart
 
-
-def generate_composite_bar_chart(aggregated_data, user_variable, aggregation_level):
+def generate_area_chart(aggregated_data, variable, aggregation_level):
+    # Base chart configuration
     base = alt.Chart(aggregated_data).encode(
-        x=alt.X('time_period', type=get_x_axis_type(aggregation_level), title='Time Period')
+        x=alt.X('time_period', type=get_x_axis_type(aggregation_level), title='Time Period'),
     )
     
-    # Min and Max BWH Charts (always included)
-    min_bwh = base.mark_bar(color='blue').encode(y=alt.Y('lotusMinBWH_ft:Q', title='Breaking Wave Height (ft)'),
-        tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip('lotusMinBWH_ft:Q', title='Min Breaking Wave Height')]
-    )
-    max_bwh = base.mark_bar(color='red').encode(y=alt.Y('lotusMaxBWH_ft:Q', title='Max Breaking Wave Height (ft)'),
-        tooltip=[alt.Tooltip('lotusMaxBWH_ft:Q', title='Max Breaking Wave Height')]
-    )
-    
-    if "Part" not in user_variable:
-        base = base.properties(width=900, height=600)
-        # User Variable Chart (non-partitioned)
-        user_var_chart = base.mark_bar(color='green').encode(
-            y=alt.Y(f'{user_variable}:Q', title=f'{user_variable}'),
-            tooltip=[alt.Tooltip(f'{user_variable}:Q', title=f'{user_variable}')]
+    if "Part" not in variable:
+        base = base.properties(width=500, height=300)
+        # Standard area chart for non-partitioned data
+        chart = base.mark_area().encode(
+            y=alt.Y(f'{variable}:Q', title=f'{variable}'),
+            tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title=f'{variable}')]
         )
-        chart = alt.layer(min_bwh, max_bwh, user_var_chart).resolve_scale(
-            y='shared'
-        ).properties(width=900, height=600)
     else:
-        base = base.properties(width=300, height=200)
+        base = base.properties(width=150, height=100)
 
-        charts = []
-        for i in range(6):
-            partition_variable = f'{user_variable.replace("X", str(i))}'
-            partition_chart = base.mark_bar().encode(
-                y=alt.Y(f'{partition_variable}:Q', title=f'Value (Partition {i})'),
-                tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'Value (Partition {i})')]
+        global_min = aggregated_data[[variable.replace("X", str(i)) for i in range(6)]].min().min()
+        global_max = aggregated_data[[variable.replace("X", str(i)) for i in range(6)]].max().max()
+
+        # Handling partitioned variables, assuming variable format "PartX" where X is the partition number
+        partition_charts = []
+        for i in range(6):  # For partitions 0-5
+            partition_variable = variable.replace("X",f"{i}")
+            partition_chart = base.mark_area().encode(
+                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'{partition_variable} (Partition {i})'),
+                tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'{partition_variable} (Partition {i})')]
             )
-            chart = alt.layer(min_bwh, max_bwh, partition_chart)
-            charts.append(chart)
-        
-        top_row = alt.hconcat(*charts[:3])  
-        bottom_row = alt.hconcat(*charts[3:])
+            partition_charts.append(partition_chart)
+                
+        # Assuming we always have 6 charts ready to be displayed
+        top_row = alt.hconcat(*partition_charts[:3])  # First 3 charts
+        bottom_row = alt.hconcat(*partition_charts[3:])  # Last 3 charts
 
         chart = alt.vconcat(top_row, bottom_row).resolve_scale(
             x='shared',
             y='shared'
         )
-    
+        
     return chart
+
 
 def generate_seasonal_chart():
     variable = 'lotusMaxBWH_ft'
@@ -644,8 +631,6 @@ def generate_top_smallest_waves():
     # Use this to manually look at dates that have small waves
     top_waves = aggregated_data.nsmallest(5, 'lotusMinBWH_ft')
 
-    print(top_waves)
-
     wave_set1 = process_data('lotusMaxBWH_ft', 'Hour', '2021-07-26', '2021-08-01')
     wave_set2 = process_data('lotusMaxBWH_ft', 'Hour', '2019-11-04', '2019-11-11')
     wave_set3 = process_data('lotusMaxBWH_ft', 'Hour', '2022-07-25', '2022-08-01')
@@ -686,35 +671,16 @@ def update_chart():
     aggregation = request.args.get('aggregation', 'Month')
     start_date = request.args.get('startDate', None)
     end_date = request.args.get('endDate', None)
-    chart_type = request.args.get('chartType', 'line')
 
     aggregated_data = process_data(variable, aggregation, start_date, end_date)
-    if chart_type == 'line':
-        chart_spec = generate_line_chart(aggregated_data, variable, aggregation).to_dict()
-    elif chart_type == 'bar':
-        chart_spec = generate_bar_chart(aggregated_data, variable, aggregation).to_dict()
+    line = generate_line_chart(aggregated_data, variable, aggregation)
+    bar = generate_bar_chart(aggregated_data, variable, aggregation)
+    scatter = generate_scatter_chart(aggregated_data, variable, aggregation)
+    area = generate_area_chart(aggregated_data, variable, aggregation)
     
-
-    return jsonify(chart_spec)
-
-@app.route('/update_composite_chart', methods=['GET'])
-def update_composite_chart():
-    user_variable = request.args.get('variable', 'lotusSigh_mt')
-    aggregation = request.args.get('aggregation', 'Month')
-    start_date = request.args.get('startDate', None)
-    end_date = request.args.get('endDate', None)
-    chart_type = request.args.get('chartType', 'line')
-
-    aggregated_data = process_data(user_variable, aggregation, start_date, end_date)
-
-    if chart_type == 'line':
-        chart_spec = generate_composite_line_chart(aggregated_data, user_variable, aggregation).to_dict()
-    elif chart_type == 'bar':
-        chart_spec = generate_composite_bar_chart(aggregated_data, user_variable, aggregation).to_dict()
+    chart_spec = ( (line | area ) & (scatter | bar) ).to_dict()
     
-
     return jsonify(chart_spec)
-
 
 @app.route('/')
 def home():
@@ -736,28 +702,12 @@ def home():
     big_chart1 = generate_top_biggest_waves().to_dict()
 
     small_chart1 = generate_top_smallest_waves().to_dict()
-
-    # Show vars of top 3 largest waves and smallest waves and what the conditions were
     
     # Prepare data for Chart 1
     variable1 = request.args.get('variable1', default='lotusSigh_mt')
     aggregation1 = request.args.get('aggregation1', default='Month')
     aggregated_data1 = process_data(variable1, aggregation1)
     chart1_spec = generate_line_chart(aggregated_data1, variable1, aggregation1).to_dict()
-
-    # Prepare data for Chart 2
-    variable2 = request.args.get('variable2', default='lotusSigh_mt')
-    aggregation2 = request.args.get('aggregation2', default='Month')
-    aggregated_data2 = process_data(variable2, aggregation2)
-    chart2_spec = generate_composite_line_chart(aggregated_data2, variable2, aggregation2).to_dict()
-
-    # Prepare data for Chart 3
-    variable3 = request.args.get('variable3', default='lotusSigh_mt')
-    aggregation3 = request.args.get('aggregation3', default='Month')
-    aggregated_data3 = process_data(variable3, aggregation3)
-    chart3_spec = generate_line_chart(aggregated_data3, variable3, aggregation3).to_dict()
-
-    # Add more charts as needed
 
     return render_template('index2.html',
                            seasonal_chart_spec=seasonal_chart_spec,
@@ -770,9 +720,6 @@ def home():
                            big_chart1=big_chart1,
                            small_chart1=small_chart1,
                            chart1_spec=chart1_spec,
-                           chart2_spec=chart2_spec,
-                           chart3_spec=chart2_spec,
-                           # Pass additional chart specs as needed
                            )
 
 if __name__ == '__main__':

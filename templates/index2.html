@@ -183,23 +183,31 @@
       </section>
       
       <section>
+
+	<h1>Interactive Data Exploration</h1>
+	<p>
+	  This section of our platform empowers you to dive into the intricacies of oceanographic data. With our interactive tools, you have the freedom to select a specific time frame using the Date Range Filter, choose from a variety of ocean variables, and view the data aggregated over different time scales.
+	</p>
+	<p>
+	  We provide multiple visualization formats, including line charts, area charts, scatter plots, and bar charts, to facilitate a comprehensive understanding of the patterns and trends within the data. Whether you’re curious about the highest waves or the calmest tides, our platform will visualize the information in a format that best suits your investigative needs.
+	</p>
+	<p>
+	  Each variable comes with a detailed explanation, ensuring that you’re informed about the significance and impact of each measurement. From the experienced researcher to the casual enthusiast, our tools are designed to enhance learning and discovery for all.
+	</p>
+	
 	<h2>Date Range Filter</h2>
 	<label for="startDate">Start Date:</label>
-	<input type="date" id="startDate" name="start-date" value="2019-10-01" min="2019-01-01" max="2023-12-31" onchange="updateAllCharts()">
+	<input type="date" id="startDate" name="start-date" value="2019-10-01" min="2019-01-01" max="2023-12-31" onchange="updateChart()">
 	
 	<label for="endDate">End Date:</label>
-	<input type="date" id="endDate" name="end-date" value="2023-12-31" min="2019-01-01" max="2023-12-31" onchange="updateAllCharts()">
+	<input type="date" id="endDate" name="end-date" value="2023-12-31" min="2019-01-01" max="2023-12-31" onchange="updateChart()">
       </section>
       
       <!-- Chart 1 Controls -->
       <section>
+
 	<p id="chart1Description">Select a variable to see its description.</p>
 	<div>
-	  
-	  <select id="chartType1" onchange="loadChartData('1')">
-	    <option value="line">Line Chart</option>
-	    <option value="bar">Bar Chart</option>
-	  </select>
 	  
           <select id="variable1" onchange="loadChartData('1')">Update Chart 1>
             <option value="lotusSigh_mt">Wave Height (mt)</option>
@@ -226,78 +234,6 @@
 	</div>
 	<div id="chart1"></div>
       </section>
-      
-      <!-- Chart 2 Controls 
-      <section>
-	<h2>Discover What Variables Impact Breaking Wave Height</h2>
-	<p>Select a variable alongside Minimum and Maximum breaking wave height to analyze their relationships.</p>
-	<div>
-	  
-	  <select id="chartType2" onchange="loadCompositeChartData()">
-	    <option value="line">Line Chart</option>
-	    <option value="bar">Bar Chart</option>
-	  </select>
-	  
-	  <select id="variable2" onchange="loadCompositeChartData()">Update Chart 2>
-            <option value="lotusSigh_mt">Wave Height (mt)</option>
-            <option value="tide_ft">Tide (ft)</option>
-	    <option value="lotusMinBWH_ft">lotusMinBWH_ft</option>
-	    <option value="lotusMaxBWH_ft">lotusMaxBWH_ft:</option>
-	    <option value="lotusSighPartX_mt">lotusSighPartX_mt</option>
-	    <option value="lotusTPPartX_sec">lotusTPPartX_sec</option>
-	    <option value="lotusPDirPartX_deg">lotusPDirPartX_deg</option>
-	    <option value="lotusSpreadPartX_deg">lotusSpreadPartX_deg</option> 
-	  </select>
-	  
-	  <select id="aggregation2" onchange="loadCompositeChartData()">Update Chart 2>
-            <option value="Day">Day</option>
-            <option value="Week">Week</option>
-	    <option value="Month">Month</option>
-	    <option value="Season">Season</option>
-	    <option value="Season_Year">Season_Year</option>
-	    <option value="Year">Year</option>
-	  </select>
-	  
-	</div>
-	<div id="chart2"></div>
-      </section>
-      -->
-      
-      <!-- Chart 3 Controls 
-      <section>
-	<h2>Chart 3: What Makes Good Surf Conditions at Morro Bay</h2>
-	<p>Here we look at ideal conditions for surf at morro bay.</p>
-	<div>
-	  
-	  <select id="chartType3" onchange="loadChartData('3')">
-	    <option value="line">Line Chart</option>
-	    <option value="bar">Bar Chart</option>
-	  </select>
-	  
-	  <select id="variable3" onchange="loadChartData('3')">Update Chart 3>
-            <option value="lotusSigh_mt">Wave Height (mt)</option>
-            <option value="tide_ft">Tide (ft)</option>
-	    <option value="lotusMinBWH_ft">lotusMinBWH_ft</option>
-	    <option value="lotusMaxBWH_ft">lotusMaxBWH_ft:</option>
-	    <option value="lotusSighPartX_mt">lotusSighPartX_mt</option>
-	    <option value="lotusTPPartX_sec">lotusTPPartX_sec</option>
-	    <option value="lotusPDirPartX_deg">lotusPDirPartX_deg</option>
-	    <option value="lotusSpreadPartX_deg">lotusSpreadPartX_deg</option>
-	  </select>
-	  
-	  <select id="aggregation3" onchange="loadChartData('3')">Update Chart 3>
-            <option value="Day">Day</option>
-            <option value="Week">Week</option>
-	    <option value="Month">Month</option>
-	    <option value="Season">Season</option>
-	    <option value="Season_Year">Season_Year</option>
-	    <option value="Year">Year</option>
-	  </select>
-	  
-	</div>
-	<div id="chart3"></div>
-      </section>
-      -->
       
       <script>
 
@@ -360,16 +296,13 @@
 	function loadChartData(chartId) {	  
 	    const variable = document.getElementById(`variable${chartId}`).value;
 	    const aggregation = document.getElementById(`aggregation${chartId}`).value;
-	    const chartType = document.getElementById(`chartType${chartId}`).value;
 	    const startDate = document.getElementById('startDate').value;
 	    const endDate = document.getElementById('endDate').value;
 	    
-	    if (chartId === '1') {
-		updateDescription(chartId, variable);
-	    }
+	    updateDescription(chartId, variable);
 	    
 	    const dateQuery = `&startDate=${startDate}&endDate=${endDate}`;
-	    fetch(`/update_chart?variable=${variable}&aggregation=${aggregation}${dateQuery}&chartType=${chartType}`)
+	    fetch(`/update_chart?variable=${variable}&aggregation=${aggregation}${dateQuery}`)
 		.then(response => response.json())
 		.then(chartSpec => {
 		    vegaEmbed(`#chart${chartId}`, chartSpec);
@@ -377,29 +310,12 @@
 		.catch(error => console.error('Error loading chart:', error));
 	}
 	
-	function loadCompositeChartData() {
-	    const variable = document.getElementById("variable2").value;
-	    const aggregation = document.getElementById("aggregation2").value;
-	    const chartType = document.getElementById("chartType2").value; 
-	    const startDate = document.getElementById('startDate').value;
-	    const endDate = document.getElementById('endDate').value;
-	    
-	    fetch(`/update_composite_chart?variable=${variable}&aggregation=${aggregation}&startDate=${startDate}&endDate=${endDate}&chartType=${chartType}`)
-		.then(response => response.json())
-		.then(chartSpec => {
-		    vegaEmbed('#chart2', chartSpec);
-		})
-		.catch(error => console.error('Error loading composite chart:', error));
-	}
-	
-	function updateAllCharts() {
+	function updateChart() {
 	    loadChartData('1');
-	    loadChartData('3');
-	    loadCompositeChartData();
 	}
 	
 	// Call updateAllCharts initially to load all charts with default or initial dates
-	updateAllCharts();
+	updateChart();
 	
 	function updateDescription(chartId, variable) {
 	    const descriptionElement = document.getElementById(`chart${chartId}Description`);
