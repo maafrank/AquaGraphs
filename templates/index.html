@@ -2,33 +2,213 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Surf Conditions Prototype</title>
+    <title>Ocean Mysteries: Breaking Wave Insights</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <script src="https://unpkg.com/scrollama"></script>
   </head>
   <body>
     <div class="container">
-      <h1>Surf Conditions Visualization</h1>
-      <section>
-	<h2>Date Range Filter</h2>
-	<label for="startDate">Start Date:</label>
-	<input type="date" id="startDate" name="start-date" value="2019-10-01" min="2019-01-01" max="2023-12-31" onchange="updateAllCharts()">
-	
-	<label for="endDate">End Date:</label>
-	<input type="date" id="endDate" name="end-date" value="2023-12-31" min="2019-01-01" max="2023-12-31" onchange="updateAllCharts()">
+      <h1>Ocean Mysteries: Breaking Wave Insights</h1>
+      <p class="tagline">Have you ever wondered about the mysteries of the ocean? On this website, we'll dive deep into the causes and variables affecting breaking wave height, exploring the hidden forces that shape our seas.</p>
+
+      <section class="step" id="seasonal-trends">
+	<div>
+          <h2>Unveiling Seasonal Patterns in Breaking Wave Heights</h2>
+          <p>There are myriad factors influencing the dynamics of breaking waves, each interplaying in complex ways. Among these, seasonal variations stand out for their profound impact, dictating not just the rhythm of life in the ocean, but also shaping the experiences of marine enthusiasts and professionals alike. In this section, we delve into the seasonal data, aiming to uncover trends that highlight the cyclical nature of our seas.</p>
+          
+          <p>Understanding these patterns is not just about satisfying curiosity; it holds practical implications for surfers seeking the perfect wave, for coastal communities planning around tourism seasons, and for scientists studying marine biodiversity and climate change. By analyzing wave height data across different seasons, we can start to draw connections between broader environmental changes and their effects on oceanic conditions.</p>
+          
+          <p>Let's embark on a journey through the seasons, visualizing how the heights of breaking waves fluctuate over the year. This exploration might reveal surprising insights into the hidden rhythms of the ocean, offering a new perspective on the seemingly chaotic world of waves.</p>
+          
+          <h2>Seasonal Analysis of Breaking Wave Heights</h2>
+          <p>As we delve into the rhythmic patterns of the ocean, our data visualization reveals a compelling story about the power of nature's cycles. It becomes clear that the largest waves are consistently witnessed during the winter months. This seasonal surge is no mere coincidence; it's the result of powerful storms brewing over the vast expanse of the ocean. These tempests, born in the heart of the sea, unleash their energy, sculpting waves that travel great distances to present us with the awe-inspiring swells that reach our shores in winter.</p>
+          
+          <p>The interplay of atmospheric pressure, wind strength, and ocean currents all converge to form these majestic waves. In winter, the contrast between cold air over the land and warm air over the ocean is more pronounced, leading to more significant storms that are the architects of these towering waves. As they journey across the ocean, the waves gather strength, their size a testament to the journey they've endured and the forces that have molded them.</p>
+          
+          <p>This understanding not only enriches the appreciation of every surfer and ocean enthusiast who witnesses the ocean's might but also serves as a crucial insight for maritime safety and coastal management. By recognizing the seasonal peaks in wave heights, we can better prepare for the impact on coastal structures, shipping routes, and beach safety measures.</p>
+	  
+	  <div id="seasonal-chart"></div>
+          
+        </div>
+      </section>
+
+      <section class="step" id="tide-influence">
+	<div>
+          <h2>The Tidal Effect: Unraveling the Influence on Wave Heights</h2>
+          <p>The perpetual dance of the Earth, Moon, and Sun not only marks the passage of time but also sculpts the ocean's surface. Tides — the long-period waves that roll around the planet — are the result of the celestial tug-of-war, and they hold sway over the marine realm. By examining the tides, we glimpse the subtle yet powerful forces that shape our shorelines and influence the creation of waves that surfers seek.</p>
+          
+          <p>Each tide phase, from the gentle swells at high tide to the exposed seafloors at low tide, presents a different facet of the ocean's character. At high tide, waves reach further up the shore, potentially increasing wave heights and affecting wave shape and energy. Conversely, during low tide, waves break in shallower water, which can cause them to be steeper and break more quickly. The interplay between these tidal phases and the surf is a complex ballet, dictated by the gravitational pulls of our lunar and solar neighbors.</p>
+          
+          <p>By analyzing how different tide levels correlate with wave heights, we uncover patterns that are both predictable in their rhythm and variable in their expression. This analysis is not just for the academically curious; it has practical implications for coastal planning, marine navigation, and the leisurely pursuits of beachgoers and surfers alike. Recognizing the tide's influence allows for better prediction of wave conditions, contributing to safety and enjoyment along our coasts.</p>
+
+	  <h2>Tide's Influence on Wave Height</h2>
+          <p>The interplay between tidal forces and wave heights is beautifully illustrated in the chart below. The blue line traces the ebb and flow of tide levels over time, while the red line captures the corresponding peaks in wave heights. As the tides rise and fall, driven by the gravitational pull of the moon and sun, we can observe a pattern in how the waves respond to these celestial rhythms.</p>
+          
+          <p>Notice the periodic nature of the blue tide line, which reflects the regularity of the tidal cycles. In contrast, the red line showing wave heights appears more erratic, indicating the variety of factors that contribute to wave formation beyond just tides, such as wind, weather patterns, and geological features of the coastline.</p>
+          
+          <p>Through this visualization, it is evident that while tides exert a significant influence on wave heights, the relationship is not one-to-one. There are moments when high tides correspond to higher waves, yet there are also instances where waves reach their peak height during mid to low tides. This complexity is a testament to the dynamic and interconnected nature of oceanographic processes.</p>
+          
+          
+          <!-- Tide influence visualization chart goes here -->
+          <div id="tide-influence-chart"></div>
+	</div>
       </section>
       
-      <!-- Chart 1 Controls -->
-      <section>
+      <section class="step" id="swell_dir">
+	<div>
+          
+          <h2>Understanding Swell Direction and Wave Height</h2>
+	  <p>
+	    Swell direction is the direction from which ocean waves are approaching. It is an essential factor in surf forecasting as it influences both the size and quality of the waves at a particular beach. Swells are created by winds blowing across the surface of the ocean, often from storms hundreds or thousands of miles away. When these swells reach the coastline, they transform into the breaking waves that surfers ride.
+	  </p>
+	  <p>
+	    The visualization on the left shows the average swell direction in degrees around Morro Bay, with the circular heatmap representing the average wave heights corresponding to each direction. The color intensity indicates the wave height, with warmer colors representing higher waves.
+	  </p>
+	  <p>
+	    Notably, Morro Rock, a prominent landmark, can be seen in the map on the right. It acts as a natural breakwater, influencing the local wave patterns. Our data indicates that swells originating from the south tend to produce larger waves in Morro Bay. This phenomenon can be attributed to the specific bathymetry of the seabed and the shape of the coastline which can amplify southern swells.
+	  </p>
+	  <p>
+	    Understanding the relationship between swell direction and wave height is crucial for coastal activities such as surfing, boating, and shoreline construction. By analyzing the patterns displayed in the heatmap, enthusiasts and professionals can make informed decisions for a variety of purposes.
+	  </p>
+          <div id="swell-dir-chart"></div>
+	  <img src="{{ url_for('static', filename='MorroBayRockSwellDirection.png') }}" alt="Morro Bay Rock">
+	  
+	</div>
+      </section>
+
+      <section class="step" id="peak_period">
+	<div>
+	  <h2>What is Wave Period?</h2>
+	  <p>
+            The <strong>wave period</strong> is the time it takes for two successive wave crests (or troughs) to pass a fixed point. It is an essential metric for understanding the energy and movement of waves. Longer wave periods indicate waves that have traveled across vast distances, often leading to well-formed, powerful waves that are favored by surfers.
+	  </p>
+	  <p>
+            In the accompanying illustration, you can see that the distance between successive wave crests is greater for waves with a longer period. These waves typically originate from storms far out at sea and can travel large distances to reach the shore, bringing with them more energy, which translates into higher wave heights.
+	  </p>
+	  <p>
+            Conversely, waves with shorter periods are typically more locally generated and have less energy. These waves are closer together, and while they may occur more frequently, they are generally smaller in size and less powerful than their long-period counterparts.
+	  </p>
+	  <p>
+            By studying peak period data alongside wave heights, we can gain insights into the potential impact of waves on coastal areas, which is crucial for activities such as surfing, boating, and coastal management.
+	  </p>
+          <img src="{{ url_for('static', filename='PeakPeriod.jpeg') }}" alt="Peak Period">
+	  <!--<div id="peak-period-line-chart"></div>-->
+
+	  <h2>Correlation between Peak Period and Wave Height</h2>
+	  <p>
+            The chart below illustrates the relationship between the <strong>average peak period</strong> of waves and their corresponding <strong>maximum wave heights</strong>. The average peak period, measured in seconds, refers to the average time interval between successive wave crests.
+	  </p>
+	  <p>
+            As indicated by the trend line in red, there is a positive correlation between the average peak period and wave height. In essence, this suggests that longer period waves tend to have greater heights. Such waves have typically traveled longer distances, undisturbed, allowing them to gather more energy and, consequently, form larger waves upon reaching the coast.
+	  </p>
+	  <p>
+            This relationship is significant for a variety of coastal activities. For surfers, longer period waves can provide a more powerful and sustained ride. For coastal engineers and planners, understanding this correlation aids in the design of structures and the implementation of coastal management strategies to mitigate erosion and flooding risks.
+	  </p>
+          <div id="peak-period-chart"></div>
+	  
+	</div>
+      </section>
+
+      <section class="step" id="wave_partitions_explanation">
+	<div>
+	  <h2>Understanding Wave Partitions</h2>
+	  <p>
+            Wave partitions represent the division of the total significant wave height into components that correspond to different wave systems or swells present in the ocean at any given time. Each partition captures a unique set of characteristics—such as direction, period, and height—associated with a portion of the overall wave structure.
+	  </p>
+	  <p>
+            In our data, we observe six partitions labeled <code>lotusSighPartX_mt</code>, where <code>X</code> ranges from 0 to 5. Each partition measures the significant wave height for a particular wave system, with the sum of these partitions providing an approximation of the total significant wave height, denoted as <code>lotusSigh_mt</code>.
+	  </p>
+	  <p>
+            The total significant wave height <code>lotusSigh_mt</code> is a commonly used oceanographic metric that represents the average height of the highest one-third of waves in the middle of the ocean. It is a key indicator of the overall energy present in the wave field and is not to be confused with breaking wave height, which is observed near the shore.
+	  </p>
+	  <p>
+            By analyzing wave partitions, we can gain a more nuanced understanding of the wave field's complexity and how different wave systems interact. This insight is invaluable for applications such as maritime navigation, offshore operations, and surf forecasting.
+	  </p>
+
+	  <div id="swell-partitions-chart"></div>
+
+	  <h2>Weighted Sum of Wave Partitions vs. Total Significant Wave Height</h2>
+	  <p>
+            The chart visualizes the relationship between the weighted sum of wave partitions and the total significant wave height, denoted as <code>lotusSigh_mt</code>. Each partition represents a segment of the wave system and has been weighted differently to approximate the total significant wave height. The weights used are [1, 0.6, 0.5, 0.4, 0.3, 0.2] for the partitions respectively, acknowledging that not all partitions contribute equally to the observed wave height.
+	  </p>
+	  <p>
+            It's important to note that while there is a strong correlation, the sum of partitions does not perfectly equal the total significant wave height. This discrepancy may be due to various factors, such as the interaction between different wave systems, or the methodology used to measure and record these metrics.
+	  </p>
+	  <p>
+            The variable <code>lotusSigh_mt</code> represents the significant wave height in the middle of the ocean, which differs from breaking wave heights observed near the coast. Significant wave height is a statistical measure that denotes the mean height of the highest third of waves in a wave spectrum, averaged over a period of time. This measure is critical for understanding the general sea conditions far from shore, and is particularly useful for navigation, marine forecasting, and offshore operations.
+	  </p>
+	  <div id="swell-partitions-chart2"></div>
+	</div>
+      </section>
+
+      <section class="step" id="big_chart">
+	<div>
+	  <h2>Comparative Analysis of Wave Conditions</h2>
+	  <p>
+	    This section delves into the comparison of conditions during the top highest and smallest wave events. 
+	    In the provided visualizations, we track several variables over time to discern patterns and influences.
+	  </p>
+	  <p>
+	    The blue line denotes wave height, indicating the vertical extent of waves during specific periods. 
+	    In contrast, the orange line reflects tide levels, providing insight into the gravitational pull effects 
+	    of the sun and moon during the same intervals.
+	  </p>
+	  <p>
+	    Each point's color corresponds to the swell direction, with distinct colors representing different compass directions, 
+	    such as North (N), Northeast (NE), and so on. The size of each dot correlates with the wave period, measured in seconds, 
+	    where larger dots signify longer periods. This confluence of factors — wave height, tide level, swell direction, and 
+	    wave period — intertwines to shape the surfing conditions at any given moment.
+	  </p>
+
+	  <h2>Insights from Wave Data</h2>
+	  <p>
+	    Each graph depicted represents a detailed snapshot of wave activity over the course of a week, providing hourly data that uncovers the rhythms of the sea. Through careful observation, we can glean several key insights:
+	  </p>
+	  <ul>
+	    <li>The <strong>largest waves</strong> tend to occur between December and January, suggesting a seasonal pattern where winter storms contribute to more significant wave formations.</li>
+	    <li>Conversely, the <strong>smallest waves</strong> are observed between July and November, a period typically associated with calmer ocean conditions in this region.</li>
+	    <li>A notable trend is that the largest waves often coincide with swells coming from the west. Given Morro Bay's location on the west coast, these swells travel unimpeded across the vast expanse of the Pacific, gathering size and power.</li>
+	    <li>The <strong>influence of tide</strong> on wave height appears minimal, indicating that other factors may play a more dominant role in wave formation during these peak events.</li>
+	    <li>The <strong>peak period</strong> data, representing the time between successive waves, shows only a slight correlation with wave height, although larger waves do have a tendency to have a longer peak period.</li>
+	  </ul>
+	  <p>
+	    These observations highlight the complexity of oceanic behavior and the multitude of factors that contribute to the surfing conditions experienced at Morro Bay.
+	  </p>
+          <div id="big-chart1"></div>
+	  <div id="small-chart1"></div>
+	  
+	</div>
+      </section>
+      
+      <section class="step" id="interactive">
+
+	<h1>Interactive Data Exploration</h1>
+	<p>
+	  This section of our platform empowers you to dive into the intricacies of oceanographic data. With our interactive tools, you have the freedom to select a specific time frame using the Date Range Filter, choose from a variety of ocean variables, and view the data aggregated over different time scales.
+	</p>
+	<p>
+	  We provide multiple visualization formats, including line charts, area charts, scatter plots, and bar charts, to facilitate a comprehensive understanding of the patterns and trends within the data. Whether you’re curious about the highest waves or the calmest tides, our platform will visualize the information in a format that best suits your investigative needs.
+	</p>
+	<p>
+	  Each variable comes with a detailed explanation, ensuring that you’re informed about the significance and impact of each measurement. From the experienced researcher to the casual enthusiast, our tools are designed to enhance learning and discovery for all.
+	</p>
+	
+	<h2>Date Range Filter</h2>
+	<label for="startDate">Start Date:</label>
+	<input type="date" id="startDate" name="start-date" value="2019-10-01" min="2019-01-01" max="2023-12-31" onchange="updateChart()">
+	
+	<label for="endDate">End Date:</label>
+	<input type="date" id="endDate" name="end-date" value="2023-12-31" min="2019-01-01" max="2023-12-31" onchange="updateChart()">
+      <!--</section>
+      
+       
+      <section>-->
+
 	<p id="chart1Description">Select a variable to see its description.</p>
 	<div>
-	  
-	  <select id="chartType1" onchange="loadChartData('1')">
-	    <option value="line">Line Chart</option>
-	    <option value="bar">Bar Chart</option>
-	  </select>
 	  
           <select id="variable1" onchange="loadChartData('1')">Update Chart 1>
             <option value="lotusSigh_mt">Wave Height (mt)</option>
@@ -56,96 +236,100 @@
 	<div id="chart1"></div>
       </section>
       
-      <!-- Chart 2 Controls -->
-      <section>
-	<h2>Discover What Variables Impact Breaking Wave Height</h2>
-	<p>Select a variable alongside Minimum and Maximum breaking wave height to analyze their relationships.</p>
-	<div>
-	  
-	  <select id="chartType2" onchange="loadCompositeChartData()">
-	    <option value="line">Line Chart</option>
-	    <option value="bar">Bar Chart</option>
-	  </select>
-	  
-	  <select id="variable2" onchange="loadCompositeChartData()">Update Chart 2>
-            <option value="lotusSigh_mt">Wave Height (mt)</option>
-            <option value="tide_ft">Tide (ft)</option>
-	    <option value="lotusMinBWH_ft">lotusMinBWH_ft</option>
-	    <option value="lotusMaxBWH_ft">lotusMaxBWH_ft:</option>
-	    <option value="lotusSighPartX_mt">lotusSighPartX_mt</option>
-	    <option value="lotusTPPartX_sec">lotusTPPartX_sec</option>
-	    <option value="lotusPDirPartX_deg">lotusPDirPartX_deg</option>
-	    <option value="lotusSpreadPartX_deg">lotusSpreadPartX_deg</option> 
-            <!-- Add more options as needed -->
-	  </select>
-	  
-	  <select id="aggregation2" onchange="loadCompositeChartData()">Update Chart 2>
-            <option value="Day">Day</option>
-            <option value="Week">Week</option>
-	    <option value="Month">Month</option>
-	    <option value="Season">Season</option>
-	    <option value="Season_Year">Season_Year</option>
-	    <option value="Year">Year</option>
-            <!-- Add more options as needed -->
-	  </select>
-	  
-	</div>
-	<div id="chart2"></div>
-      </section>
-      
-      <!-- Chart 3 Controls -->
-      <section>
-	<h2>Chart 3: What Makes Good Surf Conditions at Morro Bay</h2>
-	<p>Here we look at ideal conditions for surf at morro bay.</p>
-	<div>
-	  
-	  <select id="chartType3" onchange="loadChartData('3')">
-	    <option value="line">Line Chart</option>
-	    <option value="bar">Bar Chart</option>
-	  </select>
-	  
-	  <select id="variable3" onchange="loadChartData('3')">Update Chart 3>
-            <option value="lotusSigh_mt">Wave Height (mt)</option>
-            <option value="tide_ft">Tide (ft)</option>
-	    <option value="lotusMinBWH_ft">lotusMinBWH_ft</option>
-	    <option value="lotusMaxBWH_ft">lotusMaxBWH_ft:</option>
-	    <option value="lotusSighPartX_mt">lotusSighPartX_mt</option>
-	    <option value="lotusTPPartX_sec">lotusTPPartX_sec</option>
-	    <option value="lotusPDirPartX_deg">lotusPDirPartX_deg</option>
-	    <option value="lotusSpreadPartX_deg">lotusSpreadPartX_deg</option>
-            <!-- Add more options as needed -->
-	  </select>
-	  
-	  <select id="aggregation3" onchange="loadChartData('3')">Update Chart 3>
-            <option value="Day">Day</option>
-            <option value="Week">Week</option>
-	    <option value="Month">Month</option>
-	    <option value="Season">Season</option>
-	    <option value="Season_Year">Season_Year</option>
-	    <option value="Year">Year</option>
-            <!-- Add more options as needed -->
-	  </select>
-	  
-	</div>
-	<div id="chart3"></div>
-      </section>
-      <!-- Additional sections and charts as needed -->
-      
       <script>
+
+	document.addEventListener("DOMContentLoaded", function(event) {
+	    const scroller = scrollama();
+	    
+	    function handleStepEnter(response) {
+		response.element.classList.add('is-active');
+	    }
+	    
+	    function handleStepExit(response) {
+		response.element.classList.remove('is-active');
+	    }
+	    
+	    scroller.setup({
+		step: '.step',
+		offset: 0.5,
+		enter: handleStepEnter,
+		exit: handleStepExit
+	    }).onStepEnter(handleStepEnter)
+		.onStepExit(handleStepExit);
+	    
+	    // Make the first step visible
+	    document.querySelector('.step').classList.add('is-active');
+	    
+	    window.addEventListener('resize', scroller.resize);
+	});
+	
+	
+	document.addEventListener("DOMContentLoaded", function(event) {
+	    var seasonal_spec = {{ seasonal_chart_spec | tojson }};
+	    vegaEmbed('#seasonal-chart', seasonal_spec, { "actions": false }).then(function(result) {
+	    }).catch(console.error);
+	});
+	
+	document.addEventListener("DOMContentLoaded", function(event) {
+	    var tideInfluenceSpec = {{ tide_influence_chart_spec | tojson }};
+	    vegaEmbed('#tide-influence-chart', tideInfluenceSpec, { "actions": false }).then(function(result) {
+	    }).catch(console.error);
+	});
+	
+	document.addEventListener("DOMContentLoaded", function(event) {
+	    var swellDirSpec = {{ swell_direction_chart_spec | tojson }};
+	    vegaEmbed('#swell-dir-chart', swellDirSpec, { "actions": false }).then(function(result) {
+	    }).catch(console.error);
+	});
+	
+	document.addEventListener("DOMContentLoaded", function(event) {
+	    var peakPeriodLineSpec = {{ peak_period_line_chart_spec | tojson }};
+	    vegaEmbed('#peak-period-line-chart', peakPeriodLineSpec, { "actions": false }).then(function(result) {
+	    }).catch(console.error);
+	});
+	
+	document.addEventListener("DOMContentLoaded", function(event) {
+	    var peakPeriodSpec = {{ peak_period_chart_spec | tojson }};
+	    vegaEmbed('#peak-period-chart', peakPeriodSpec, { "actions": false }).then(function(result) {
+	    }).catch(console.error);
+	});
+	
+	document.addEventListener("DOMContentLoaded", function(event) {
+	    var swellPartitionsSpec = {{ swell_partitions_chart_spec | tojson }};
+	    vegaEmbed('#swell-partitions-chart', swellPartitionsSpec, { "actions": false }).then(function(result) {
+	    }).catch(console.error);
+	});
+	
+	document.addEventListener("DOMContentLoaded", function(event) {
+	    var swellPartitionsSpec2 = {{ swell_partitions_chart_spec2 | tojson }};
+	    vegaEmbed('#swell-partitions-chart2', swellPartitionsSpec2, { "actions": false }).then(function(result) {
+	    }).catch(console.error);
+	});
+	
+	document.addEventListener("DOMContentLoaded", function(event) {
+	    var bigChartSpec1 = {{ big_chart1 | tojson }};
+	    vegaEmbed('#big-chart1', bigChartSpec1, { "actions": false }).then(function(result) {
+	    }).catch(console.error);
+	});
+	
+	document.addEventListener("DOMContentLoaded", function(event) {
+	    var smallChartSpec1 = {{ small_chart1 | tojson }};
+	    vegaEmbed('#small-chart1', smallChartSpec1, { "actions": false }).then(function(result) {
+	    }).catch(console.error);
+	});
+	
+	
 	// Function to load and update chart data
 	function loadChartData(chartId) {	  
 	    const variable = document.getElementById(`variable${chartId}`).value;
 	    const aggregation = document.getElementById(`aggregation${chartId}`).value;
-	    const chartType = document.getElementById(`chartType${chartId}`).value;
 	    const startDate = document.getElementById('startDate').value;
 	    const endDate = document.getElementById('endDate').value;
 	    
-	    if (chartId === '1') {
-		updateDescription(chartId, variable);
-	    }
+	    updateDescription(chartId, variable);
 	    
 	    const dateQuery = `&startDate=${startDate}&endDate=${endDate}`;
-	    fetch(`/update_chart?variable=${variable}&aggregation=${aggregation}${dateQuery}&chartType=${chartType}`)
+	    fetch(`/update_chart?variable=${variable}&aggregation=${aggregation}${dateQuery}`)
 		.then(response => response.json())
 		.then(chartSpec => {
 		    vegaEmbed(`#chart${chartId}`, chartSpec);
@@ -153,29 +337,12 @@
 		.catch(error => console.error('Error loading chart:', error));
 	}
 	
-	function loadCompositeChartData() {
-	    const variable = document.getElementById("variable2").value;
-	    const aggregation = document.getElementById("aggregation2").value;
-	    const chartType = document.getElementById("chartType2").value; 
-	    const startDate = document.getElementById('startDate').value;
-	    const endDate = document.getElementById('endDate').value;
-	    
-	    fetch(`/update_composite_chart?variable=${variable}&aggregation=${aggregation}&startDate=${startDate}&endDate=${endDate}&chartType=${chartType}`)
-		.then(response => response.json())
-		.then(chartSpec => {
-		    vegaEmbed('#chart2', chartSpec);
-		})
-		.catch(error => console.error('Error loading composite chart:', error));
-	}
-	
-	function updateAllCharts() {
+	function updateChart() {
 	    loadChartData('1');
-	    loadChartData('3');
-	    loadCompositeChartData();
 	}
 	
 	// Call updateAllCharts initially to load all charts with default or initial dates
-	updateAllCharts();
+	updateChart();
 	
 	function updateDescription(chartId, variable) {
 	    const descriptionElement = document.getElementById(`chart${chartId}Description`);
@@ -185,217 +352,96 @@
 	    switch (variable) {
 	    case "lotusSigh_mt":
 		description = `
-     <h2><strong>lotusSigh_mt: Total significant wave height in meters:</strong></h2>
-    <p>In oceanography and marine forecasting, the "significant wave height" is a key statistic describing wave heights in water. It represents the average height of the highest one-third of waves observed over a specific period, providing a reliable estimation of wave conditions for mariners and surfers.</p>
-    <p>This metric is crucial for understanding sea conditions, focusing on larger waves that have greater impacts on activities such as surfing, boating, and coastal engineering. The "mt" signifies measurements in meters, adhering to international standards for scientific and navigational purposes.</p>
-    <p>Essentially, it indicates the average height of the highest one-third of waves at a location, measured in meters, vital for predicting surfing and sea conditions.</p>
-  `;
+	<h2><strong>lotusSigh_mt: Total significant wave height in meters:</strong></h2>
+	<p>In oceanography and marine forecasting, the "significant wave height" is a key statistic describing wave heights in water. It represents the average height of the highest one-third of waves observed over a specific period, providing a reliable estimation of wave conditions for mariners and surfers.</p>
+	<p>This metric is crucial for understanding sea conditions, focusing on larger waves that have greater impacts on activities such as surfing, boating, and coastal engineering. The "mt" signifies measurements in meters, adhering to international standards for scientific and navigational purposes.</p>
+	<p>Essentially, it indicates the average height of the highest one-third of waves at a location, measured in meters, vital for predicting surfing and sea conditions.</p>
+	`;
 		break;
 	    case "tide_ft":
 		description = `
-     <h2><strong>tide_ft: Tide level in feet:</strong></h2>
-    <p>Represents the tide level, crucial for oceanographic data and surf forecasting, showing the sea level at a specific time and location relative to a standard reference point. Tides, caused by gravitational interactions between Earth, Moon, and Sun, are essential for understanding:</p>
-    <ul>
-      <li><strong>Surfing and Coastal Activities:</strong> Tides affect wave shapes and quality, critical for selecting the best surf times.</li>
-      <li><strong>Marine Navigation:</strong> Tides influence water body depths, vital for safe boat and ship navigation.</li>
-      <li><strong>Coastal Management:</strong> Tides play a role in coastal erosion, sediment deposition, and marine life distribution, important for coastal planning and environmental management.</li>
-      <li><strong>Fishing:</strong> Tidal levels impact marine life behavior and locations, important for fishing activities.</li>
-    </ul>
-    <p>The "_ft" indicates measurements in feet, commonly used in the United States for distance and height.</p>
-  `;
+	<h2><strong>tide_ft: Tide level in feet:</strong></h2>
+	<p>Represents the tide level, crucial for oceanographic data and surf forecasting, showing the sea level at a specific time and location relative to a standard reference point. Tides, caused by gravitational interactions between Earth, Moon, and Sun, are essential for understanding:</p>
+	<ul>
+	  <li><strong>Surfing and Coastal Activities:</strong> Tides affect wave shapes and quality, critical for selecting the best surf times.</li>
+	  <li><strong>Marine Navigation:</strong> Tides influence water body depths, vital for safe boat and ship navigation.</li>
+	  <li><strong>Coastal Management:</strong> Tides play a role in coastal erosion, sediment deposition, and marine life distribution, important for coastal planning and environmental management.</li>
+	  <li><strong>Fishing:</strong> Tidal levels impact marine life behavior and locations, important for fishing activities.</li>
+	</ul>
+	<p>The "_ft" indicates measurements in feet, commonly used in the United States for distance and height.</p>
+	`;
 		break;
 	    case "lotusMinBWH_ft":
 		description = `
-     <h2><strong>lotusMinBWH_ft: Minimum breaking wave height at the beach in feet:</strong></h2>
-    <p>Defines the lowest height waves start to break, crucial for surfability and beach safety. Influenced by sea floor topography, wave energy, and tide levels, it varies by beach due to local conditions.</p>
-    <ul>
-      <li><strong>Breaking Wave Height:</strong> Height of a wave as it starts to break, critical for assessing surf conditions.</li>
-      <li><strong>Minimum Breaking Wave Height:</strong> Indicates the lowest height waves break, offering insights into potential surfing conditions and safety considerations.</li>
-      <li><strong>Measurement in Feet:</strong> Uses the imperial system, common in countries like the United States, providing direct wave height indication.</li>
-      <li><strong>At the Beach:</strong> Specifies measurement relevance to particular beach locations, where breaking wave heights can vary significantly.</li>
-    </ul>
-    <p>This metric helps assess beach conditions for surfing, shorebreak risk, and other recreational or safety considerations.</p>
-  `;
+	<h2><strong>lotusMinBWH_ft: Minimum breaking wave height at the beach in feet:</strong></h2>
+	<p>Defines the lowest height waves start to break, crucial for surfability and beach safety. Influenced by sea floor topography, wave energy, and tide levels, it varies by beach due to local conditions.</p>
+	<ul>
+	  <li><strong>Breaking Wave Height:</strong> Height of a wave as it starts to break, critical for assessing surf conditions.</li>
+	  <li><strong>Minimum Breaking Wave Height:</strong> Indicates the lowest height waves break, offering insights into potential surfing conditions and safety considerations.</li>
+	  <li><strong>Measurement in Feet:</strong> Uses the imperial system, common in countries like the United States, providing direct wave height indication.</li>
+	  <li><strong>At the Beach:</strong> Specifies measurement relevance to particular beach locations, where breaking wave heights can vary significantly.</li>
+	</ul>
+	<p>This metric helps assess beach conditions for surfing, shorebreak risk, and other recreational or safety considerations.</p>
+	`;
 		break;
 	    case "lotusMaxBWH_ft":
 		description = `
-     <h2><strong>lotusMaxBWH_ft: Maximum breaking wave height at the beach in feet:</strong></h2>
-    <p>Denotes the highest height waves are seen to break at specific beach locations, measured in feet. Essential for gauging potential maximum wave conditions, impacting surfing, safety, and coastal management.</p>
-    <ul>
-      <li><strong>Maximum Breaking Wave Height:</strong> The tallest height waves break, influenced by wind speed, swell direction, and seabed contours.</li>
-      <li><strong>Measurement in Feet:</strong> Height measured in feet, a standard unit in the United States, aiding surfers and coastal managers in planning and safety.</li>
-      <li><strong>At the Beach:</strong> Measurement specific to beach locations, where wave conditions vary greatly due to local topography and geographical factors.</li>
-    </ul>
-    <p>"lotusMaxBWH_ft" informs on the upper wave height limit at beaches, offering insights into extreme surfing conditions and coastal infrastructure considerations.</p>
-  `;
+	<h2><strong>lotusMaxBWH_ft: Maximum breaking wave height at the beach in feet:</strong></h2>
+	<p>Denotes the highest height waves are seen to break at specific beach locations, measured in feet. Essential for gauging potential maximum wave conditions, impacting surfing, safety, and coastal management.</p>
+	<ul>
+	  <li><strong>Maximum Breaking Wave Height:</strong> The tallest height waves break, influenced by wind speed, swell direction, and seabed contours.</li>
+	  <li><strong>Measurement in Feet:</strong> Height measured in feet, a standard unit in the United States, aiding surfers and coastal managers in planning and safety.</li>
+	  <li><strong>At the Beach:</strong> Measurement specific to beach locations, where wave conditions vary greatly due to local topography and geographical factors.</li>
+	</ul>
+	<p>"lotusMaxBWH_ft" informs on the upper wave height limit at beaches, offering insights into extreme surfing conditions and coastal infrastructure considerations.</p>
+	`;
 		break;
 	    case "lotusSighPartX_mt":
 		description = `
-    <h2><strong>lotusSighPartX_mt: Significant wave height of swell partition X in meters:</strong></h2>
-    <p>Denotes the significant wave height within a specific swell partition, vital for marine forecasting. "LOTUS" is Surfline's model, "Sigh" represents "Significant Height", and "PartX" refers to individual swell systems affecting a location, with "X" as the partition number.</p>
-    <ul>
-      <li><strong>lotus:</strong> Surfline's forecast model.</li>
-      <li><strong>Sigh:</strong> Abbreviation for "Significant Height", indicating the average height of the highest third of waves.</li>
-      <li><strong>PartX:</strong> Denotes multiple swell partitions, with "X" specifying the partition number, allowing differentiation between swell systems.</li>
-      <li><strong>_mt:</strong> Measurement unit in meters, providing a standardized measure of wave heights.</li>
-    </ul>
-    <p>This metric is crucial for surfers and maritime operations, offering insights into wave energy and surf quality across different swell sources.</p>
-  `;
+	<h2><strong>lotusSighPartX_mt: Significant wave height of swell partition X in meters:</strong></h2>
+	<p>Denotes the significant wave height within a specific swell partition, vital for marine forecasting. "LOTUS" is Surfline's model, "Sigh" represents "Significant Height", and "PartX" refers to individual swell systems affecting a location, with "X" as the partition number.</p>
+	<ul>
+	  <li><strong>lotus:</strong> Surfline's forecast model.</li>
+	  <li><strong>Sigh:</strong> Abbreviation for "Significant Height", indicating the average height of the highest third of waves.</li>
+	  <li><strong>PartX:</strong> Denotes multiple swell partitions, with "X" specifying the partition number, allowing differentiation between swell systems.</li>
+	  <li><strong>_mt:</strong> Measurement unit in meters, providing a standardized measure of wave heights.</li>
+	</ul>
+	<p>This metric is crucial for surfers and maritime operations, offering insights into wave energy and surf quality across different swell sources.</p>
+	`;
 		break;
 	    case "lotusTPPartX_sec":
 		description = `
-    <h2><strong>lotusTPPartX_sec: Peak period of swell partition X in seconds:</strong></h2>
-    <p>Key to surf forecasting, this indicates the time interval between successive waves in a swell's most energy-dense part, measured in seconds. The "TP" stands for "Peak Period," and "PartX" for a specific swell partition, with "X" denoting the partition number.</p>
-    <ul>
-      <li><strong>Shorter Peak Periods (5-8 seconds):</strong> Suggest locally generated wind swells, typically less powerful and choppier.</li>
-      <li><strong>Longer Peak Periods (12-20 seconds or more):</strong> Indicate swells from distant storms, characterized by more organized, powerful, and cleaner waves.</li>
-    </ul>
-    <p>This measurement is crucial for predicting wave size, energy, and surf quality, aiding in identifying optimal surfing conditions.</p>
-  `;
+	<h2><strong>lotusTPPartX_sec: Peak period of swell partition X in seconds:</strong></h2>
+	<p>Key to surf forecasting, this indicates the time interval between successive waves in a swell's most energy-dense part, measured in seconds. The "TP" stands for "Peak Period," and "PartX" for a specific swell partition, with "X" denoting the partition number.</p>
+	<ul>
+	  <li><strong>Shorter Peak Periods (5-8 seconds):</strong> Suggest locally generated wind swells, typically less powerful and choppier.</li>
+	  <li><strong>Longer Peak Periods (12-20 seconds or more):</strong> Indicate swells from distant storms, characterized by more organized, powerful, and cleaner waves.</li>
+	</ul>
+	<p>This measurement is crucial for predicting wave size, energy, and surf quality, aiding in identifying optimal surfing conditions.</p>
+	`;
 		break;
 	    case "lotusPDirPartX_deg":
 		description = `
-    <h2><strong>lotusPDirPartX_deg: Compass direction of swell partition X in degrees:</strong></h2>
-    <p>Indicates the primary direction from which a swell partition originates, using degrees. "LotusPDir" likely refers to "Lotus Peak Direction," with "PartX" signifying individual swell partitions distinguished by origin, period, or direction.</p>
-    <ul>
-      <li><strong>_deg:</strong> Direction measured in degrees, adhering to compass conventions (North as 0/360, East as 90, South as 180, West as 270).</li>
-    </ul>
-    <p>This data is vital for predicting how swells interact with coastlines and underwater features, influencing wave characteristics and surfing conditions.</p>
-  `;
+	<h2><strong>lotusPDirPartX_deg: Compass direction of swell partition X in degrees:</strong></h2>
+	<p>Indicates the primary direction from which a swell partition originates, using degrees. "LotusPDir" likely refers to "Lotus Peak Direction," with "PartX" signifying individual swell partitions distinguished by origin, period, or direction.</p>
+	<ul>
+	  <li><strong>_deg:</strong> Direction measured in degrees, adhering to compass conventions (North as 0/360, East as 90, South as 180, West as 270).</li>
+	</ul>
+	<p>This data is vital for predicting how swells interact with coastlines and underwater features, influencing wave characteristics and surfing conditions.</p>
+	`;
 		break;
 	    case "lotusSpreadPartX_deg":
 		description = `
-    <h2><strong>lotusSpreadPartX_deg: Spread of swell partition X in degrees:</strong></h2>
-    <p>Defines the range of directions from which waves in a swell partition are arriving, measured in degrees. A narrow spread indicates waves come from a uniform direction, producing consistent surf conditions. A wide spread suggests a broader range of directions, leading to mixed or chaotic sea states, impacting surf conditions and beach safety.</p>
-    <p>For example, a main direction of 270 degrees (west) with a 30-degree spread indicates waves moving primarily west but can vary from 255 (WSW) to 285 degrees (WNW).</p>
-  `;
+	<h2><strong>lotusSpreadPartX_deg: Spread of swell partition X in degrees:</strong></h2>
+	<p>Defines the range of directions from which waves in a swell partition are arriving, measured in degrees. A narrow spread indicates waves come from a uniform direction, producing consistent surf conditions. A wide spread suggests a broader range of directions, leading to mixed or chaotic sea states, impacting surf conditions and beach safety.</p>
+	<p>For example, a main direction of 270 degrees (west) with a 30-degree spread indicates waves moving primarily west but can vary from 255 (WSW) to 285 degrees (WNW).</p>
+	`;
 		break;
 		// Add more cases if needed
 	    }
 	    descriptionElement.innerHTML = description;
 	}
-
 	</script>
-
-
-      <h1>Wave Direction</h1>
-      <h2> Is There a Relationship between Wave Direction and Swell Height? </h2>
-      <h3>Iteration 1 </h3>
-      <p> For this iteration, I made a scatter plot to see the relationship between the wave direction and swell height by partition. From this visualization below, we can see that most of the waves headed in the South to Northwest direction. There seems to be two clusters for wave direction.</p>
-      
-      <p>For partition 0, 1, and 2, it seems that swell height can be higher for swell headed in the Northwest. However, for partition 3, 4, and 5, wave direction does not seem to have a relationship with swell height.</p>
-      
-      <div id="vis1"></div>
-      
-      
-      <script>
-	function openVis1() {
-	    //const pnum = document.getElementById(`partitionvis1`).value;
-	    const response = fetch('/updatevis1').then(response => response.json()).then(chartSpec => {vegaEmbed(`#vis1`, chartSpec);}).catch(error => console.error('Error loading chart:', error));
-	    console.log(response)
-	}
-	openVis1()
-      </script>
-      
-      <h3>Iteration 2 </h3>
-      
-      <p> While the visualization in iteration 1 is easy to see trends in wave direction as a number, it is not easy to convert the numbers to North, South, East, West. Therefore, in the second visualization, I made a radial chart when the location of each dot represent the degree of the wave direction and the distance from the center of the circle represents the swell height. </p>
-      
-      <div class='tableauPlaceholder' id='viz1710335392267' style='position: relative'><noscript><a href='#'><img alt='Wave Direction and Height Radial Graph ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Wa&#47;Waveradialgraph&#47;Sheet2&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='Waveradialgraph&#47;Sheet2' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Wa&#47;Waveradialgraph&#47;Sheet2&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1710335392267');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
-      
-      
-      <h2> How Does Wave Direction Differ Within a Month? </h2>
-      <h3>Iteration 1 </h3>
-      <p> For the first iteration, we made a line chart that presents the wave direction by day within a month for all 6 partitions. </p>
-      
-      <div id="vis2_1"></div>
-      
-      
-      <script>
-	function openVis2_1() {
-	    //const pnum = document.getElementById(`partitionvis2`).value;
-	    //console.log(pnum)
-	    const response = fetch('/updatevis2_1').then(response => response.json()).then(chartSpec => {vegaEmbed(`#vis2_1`, chartSpec);}).catch(error => console.error('Error loading chart:', error));
-	    console.log(response)
-	}
-	openVis2_1()
-      </script>	
-      
-      <h3>Iteration 2 </h3>
-      <p>As the lines go up and down frequently in the line graph for iteration 1, there are several overlaps between the lines that it is hard to understand trends and compare with different years. Therefore in the second iteration, we made a line chart that presents the wave direction for a certain month and partition. Each line represents a different year. </p>
-      <div id="vis2_2"></div>
-      
-      
-      <script>
-	function openVis2_2() {
-	    //const pnum = document.getElementById(`partitionvis2`).value;
-	    //console.log(pnum)
-	    const response = fetch('/updatevis2_2').then(response => response.json()).then(chartSpec => {vegaEmbed(`#vis2_2`, chartSpec);}).catch(error => console.error('Error loading chart:', error));
-	    console.log(response)
-	}
-	openVis2_2()
-	
-      </script>
-      
-      <h3>Iteration 3 </h3>
-      
-      <p> In the third iteration, we created a heatmap to show the wave direction by color instead of a line. While the first 2 iterations averaged the direction, this iteration encodes the wave direction by hour of every day in a month. It can now be seen that the wave direction is not constant throughout the day and that the wave direction is cyclical. </p>
-      
-      <div id="vis2_3"></div>
-      
-      <script>
-	function openVis2_3() {
-	    //const pnum = document.getElementById(`partitionvis2`).value;
-	    //console.log(pnum)
-	    const response = fetch('/updatevis2_3').then(response => response.json()).then(chartSpec => {vegaEmbed(`#vis2_3`, chartSpec);}).catch(error => console.error('Error loading chart:', error));
-	    console.log(response)
-	}
-	openVis2_3()
-	
-      </script>
-      
-      <h2> Does Direction Affect Period and Swell Height? </h2>
-      <h3>Iteration 1 </h3>
-      <p> For my first iteration, we created a scatter plot to represent the relationship between the partition period and swell height. We color coded each dot in the scatter plot by the direction categorized as North, East, South or West. </p>
-      <div id="vis3_1"></div>
-      <script>
-	function openVis3_1() {
-	    //const pnum = document.getElementById(`partitionvis2`).value;
-	    //console.log(pnum)
-	    const response = fetch('/updatevis3_1').then(response => response.json()).then(chartSpec => {vegaEmbed(`#vis3_1`, chartSpec);}).catch(error => console.error('Error loading chart:', error));
-	    console.log(response)
-	}
-	openVis3_1()
-	
-      </script>
-      
-      <h3>Iteration 2 </h3>
-      <p>In iteration 1, the dot overlapped significantly, so it was challenging to see the differences by direction. Therefore in iteration 2, we graphed the partition period and swell height by a certain direction. By comparing the scatter plots of the different directions, it seems that swell height increases with the increase in period, regardless of the direction of the waves.</p>
-      <div id="vis3_2"></div>
-      <script>
-	function openVis3_2() {
-	    //const pnum = document.getElementById(`partitionvis2`).value;
-	    //console.log(pnum)
-	    const response = fetch('/updatevis3_2').then(response => response.json()).then(chartSpec => {vegaEmbed(`#vis3_2`, chartSpec);}).catch(error => console.error('Error loading chart:', error));
-	    console.log(response)
-	}
-	openVis3_2()
-	
-      </script>
-
-      <h2> Future Steps </h2>
-      <p>Make section more interactive by being able to change features such as dirrerent swell partition or year.</p>
-	<div>
-	  <label id="partition_vis1">Partition Number:</label> 
-	  <select name="partitionvis1" id="partitionvis1" onchange = "openVis1()"> 
-    	    <option value="Partition0">Partition 0</option>
-            <option value="Partition1">Partition 1</option> 
-            <option value="Partition2">Partition 2</option> 
-            <option value="Partition3">Partition 3</option> 
-            <option value="Partition4">Partition 4</option> 
-            <option value="Partition5">Partition 5</option>
-	  </select>
-	</div>
-    </body>
+  </body>
   </div>
 </html>
