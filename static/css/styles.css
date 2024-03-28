@@ -5,8 +5,8 @@
 }
 
 .step {
-    opacity: 0.25;
-    transition: opacity 3.0s ease-in-out;
+    opacity: 0.05;
+    transition: opacity 7.0s ease-in-out;
     visibility: visable;
 }
 
