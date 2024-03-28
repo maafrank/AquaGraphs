@@ -1,56 +1,55 @@
 document.addEventListener("DOMContentLoaded", function(event) {
-    var seasonal_spec = {{ seasonal_chart_spec | tojson }};
-    vegaEmbed('#seasonal-chart', seasonal_spec, { "actions": false }).then(function(result) {
-    }).catch(console.error);
+    const scroller = scrollama();
+    
+    function handleStepEnter(response) {
+        response.element.classList.add('is-active');
+    }
+    
+    function handleStepExit(response) {
+        response.element.classList.remove('is-active');
+    }
+    
+    scroller.setup({
+        step: '.step',
+        offset: 0.5,
+        enter: handleStepEnter,
+        exit: handleStepExit
+    }).onStepEnter(handleStepEnter)
+        .onStepExit(handleStepExit);
+    
+    // Make the first step visible
+    document.querySelector('.step').classList.add('is-active');
+    
+    window.addEventListener('resize', scroller.resize);
 });
 
-document.addEventListener("DOMContentLoaded", function(event) {
-    var tideInfluenceSpec = {{ tide_influence_chart_spec | tojson }};
-    vegaEmbed('#tide-influence-chart', tideInfluenceSpec, { "actions": false }).then(function(result) {
-    }).catch(console.error);
-});
+
 
 document.addEventListener("DOMContentLoaded", function(event) {
-    var swellDirSpec = {{ swell_direction_chart_spec | tojson }};
-    vegaEmbed('#swell-dir-chart', swellDirSpec, { "actions": false }).then(function(result) {
-    }).catch(console.error);
+    fetchChartDataAndEmbed('/get-seasonal-spec', '#seasonal-chart');
+    fetchChartDataAndEmbed('/get-tide-influence-spec', '#tide-influence-chart');
+    fetchChartDataAndEmbed('/get-swell-direction-spec', '#swell-dir-chart');
+    fetchChartDataAndEmbed('/get-peak-period-line-spec', '#peak-period-line-chart');
+    fetchChartDataAndEmbed('/get-peak-period-spec', '#peak-period-chart');
+    fetchChartDataAndEmbed('/get-swell-partitions-spec', '#swell-partitions-chart');
+    fetchChartDataAndEmbed('/get-swell-partitions-spec2', '#swell-partitions-chart2');
+    fetchChartDataAndEmbed('/get-big-chart1', '#big-chart1');
+    fetchChartDataAndEmbed('/get-small-chart1', '#small-chart1');
 });
 
-document.addEventListener("DOMContentLoaded", function(event) {
-    var peakPeriodLineSpec = {{ peak_period_line_chart_spec | tojson }};
-    vegaEmbed('#peak-period-line-chart', peakPeriodLineSpec, { "actions": false }).then(function(result) {
-    }).catch(console.error);
-});
-
-document.addEventListener("DOMContentLoaded", function(event) {
-    var peakPeriodSpec = {{ peak_period_chart_spec | tojson }};
-    vegaEmbed('#peak-period-chart', peakPeriodSpec, { "actions": false }).then(function(result) {
-    }).catch(console.error);
-});
-
-document.addEventListener("DOMContentLoaded", function(event) {
-    var swellPartitionsSpec = {{ swell_partitions_chart_spec | tojson }};
-    vegaEmbed('#swell-partitions-chart', swellPartitionsSpec, { "actions": false }).then(function(result) {
-    }).catch(console.error);
-});
-
-document.addEventListener("DOMContentLoaded", function(event) {
-    var swellPartitionsSpec2 = {{ swell_partitions_chart_spec2 | tojson }};
-    vegaEmbed('#swell-partitions-chart2', swellPartitionsSpec2, { "actions": false }).then(function(result) {
-    }).catch(console.error);
-});
-
-document.addEventListener("DOMContentLoaded", function(event) {
-    var bigChartSpec1 = {{ big_chart1 | tojson }};
-    vegaEmbed('#big-chart1', bigChartSpec1, { "actions": false }).then(function(result) {
-    }).catch(console.error);
-});
-
-document.addEventListener("DOMContentLoaded", function(event) {
-    var smallChartSpec1 = {{ small_chart1 | tojson }};
-    vegaEmbed('#small-chart1', smallChartSpec1, { "actions": false }).then(function(result) {
-    }).catch(console.error);
-});
+function fetchChartDataAndEmbed(apiEndpoint, embedContainerId) {
+    fetch(apiEndpoint)
+        .then(response => response.json())
+        .then(chartSpec => {
+            vegaEmbed(embedContainerId, chartSpec, { "actions": false })
+                .then(function(result) {
+                    // Chart successfully embedded
+                    console.log(`Chart embedded: ${embedContainerId}`);
+                })
+                .catch(console.error);
+        })
+        .catch(error => console.error('Error fetching chart data:', error));
+}
 
 
 // Function to load and update chart data
