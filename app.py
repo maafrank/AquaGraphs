@@ -665,6 +665,51 @@ def generate_top_smallest_waves():
 
 app = Flask(__name__)
 
+@app.route('/get-seasonal-spec')
+def get_seasonal_spec():
+    seasonal_chart_spec = generate_seasonal_chart().to_dict()
+    return jsonify(seasonal_chart_spec)
+
+@app.route('/get-tide-influence-spec')
+def get_tide_influence_spec():
+    tide_influence_chart_spec = generate_tide_influence_chart().to_dict()
+    return jsonify(tide_influence_chart_spec)
+
+@app.route('/get-swell-direction-spec')
+def get_swell_direction_spec():
+    swell_direction_chart_spec = generate_swell_direction_chart().to_dict()
+    return jsonify(swell_direction_chart_spec)
+
+@app.route('/get-peak-period-line-spec')
+def get_peak_period_line_spec():
+    peak_period_line_chart_spec = generate_peak_period_line_chart().to_dict()
+    return jsonify(peak_period_line_chart_spec)
+
+@app.route('/get-peak-period-spec')
+def get_peak_period_spec():
+    peak_period_chart_spec = generate_peak_period_chart().to_dict()
+    return jsonify(peak_period_chart_spec)
+
+@app.route('/get-swell-partitions-spec')
+def get_swell_partitions_spec():
+    swell_partitions_chart_spec = generate_swell_partitions_chart().to_dict()
+    return jsonify(swell_partitions_chart_spec)
+
+@app.route('/get-swell-partitions-spec2')
+def get_swell_partitions_spec2():
+    swell_partitions_chart_spec2 = generate_swell_partitions_chart2().to_dict()
+    return jsonify(swell_partitions_chart_spec2)
+
+@app.route('/get-big-chart1')
+def get_big_chart1():
+    big_chart1 = generate_top_biggest_waves().to_dict()
+    return jsonify(big_chart1)
+
+@app.route('/get-small-chart1')
+def get_small_chart1():
+    small_chart1 = generate_top_smallest_waves().to_dict()
+    return jsonify(small_chart1)
+
 @app.route('/update_chart', methods=['GET'])
 def update_chart():
     variable = request.args.get('variable', 'lotusSigh_mt')
