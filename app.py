@@ -11,6 +11,7 @@ from scipy import stats
 #####################
 ## Data Processing ##
 #####################
+data = pd.read_csv('data/MorroBayHeights.csv')
 def process_data(variable, aggregation_level, start_date=None, end_date=None):
 
     data = pd.read_csv('data/MorroBayHeights.csv')
@@ -496,16 +497,19 @@ def generate_swell_partitions_chart2():
         y=alt.Y('sum_of_partitions:Q', title='Sum of Partitions (meters)', scale=alt.Scale(domain=(min_value, max_value))),
         tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('sum_of_partitions:Q', title='Sum of Partitions')]
     )
+    
     sum_points = base.mark_point(color='green', size=50).encode(
         y=alt.Y('sum_of_partitions:Q', scale=alt.Scale(domain=(min_value, max_value))),
         tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('sum_of_partitions:Q', title='Sum of Partitions')]
     )
+    
     
     # Create a line chart with dots for total significant wave height
     total_wave_height_chart = base.mark_line(color='blue', strokeWidth=3).encode(
         y=alt.Y('lotusSigh_mt:Q', title='Total Significant Wave Height (meters)', scale=alt.Scale(domain=(min_value, max_value))),
         tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('lotusSigh_mt:Q', title='Total Significant Wave Height')]
     )
+    
     total_points = base.mark_point(color='blue', size=50).encode(
         y=alt.Y('lotusSigh_mt:Q', scale=alt.Scale(domain=(min_value, max_value))),
         tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('lotusSigh_mt:Q', title='Total Significant Wave Height')]
@@ -669,6 +673,87 @@ def generate_top_smallest_waves():
     
     return chart1 | chart2 #| chart3
 
+#####################
+## Millie's Charts ##
+#####################
+
+def dhp_agg(par_num, dfedit, unit):
+    #line graph of swell height of partition par_num by day
+    #Aggregate by day
+    scat = alt.Chart(dfedit).mark_point(shape="wedge", filled=True, size = 300).encode(
+        x=alt.X(unit),
+        y = alt.Y(f"lotusSighPart{par_num}_mt"),
+        color=alt.Color(f"lotusTPPart{par_num}_sec", scale=alt.Scale(range=["yellow", "green", "blue"])),
+        angle=alt.Angle(f"lotusPDirPart{par_num}_deg").scale(domain=[0, 360])
+    ).properties(width = 1000, height = 300)
+
+    line = alt.Chart(dfedit).mark_line().encode(
+        x=alt.X(unit),
+        y = alt.Y(f"lotusSighPart{par_num}_mt")
+    ).properties(width = 1000, height = 300)
+    return alt.layer(line, scat)
+
+def partition_height_period_selection(unit = "agg_by_date"):
+    if unit == "agg_by_date":
+        unit = "date"
+    else:
+        unit="week"
+    interval = alt.selection_interval(encodings=['x'])
+    #add date column which is a datetime that has year-month-date
+    data["date"] = pd.to_datetime(data["datetime_local"].apply(lambda x: datetime.datetime.strptime(x[:10], "%Y-%m-%d")))
+    #add week column which is a datetime of the first day of the week
+    data["week"] = data['date'].dt.to_period('W').apply(lambda r: r.start_time)
+
+    #selecting only the necessary rows
+    dfedit = data[['lotusSigh_mt', 'lotusSighPart0_mt', 'lotusTPPart0_sec',
+        'lotusPDirPart0_deg', 'lotusSighPart1_mt',
+        'lotusTPPart1_sec', 'lotusPDirPart1_deg',
+        'lotusSighPart2_mt', 'lotusTPPart2_sec', 'lotusPDirPart2_deg',
+            'lotusSighPart3_mt', 'lotusTPPart3_sec',
+        'lotusPDirPart3_deg', 'lotusSighPart4_mt',
+        'lotusTPPart4_sec', 'lotusPDirPart4_deg', 
+        'lotusSighPart5_mt', 'lotusTPPart5_sec', 'lotusPDirPart5_deg',
+        'lotusMinBWH_ft', 'lotusMaxBWH_ft', unit]].groupby(unit).mean().reset_index()
+
+    #creating the top graph, which is 6 lines, each representing the swell height for certain partition aggregated by day or week
+    top_graph = alt.layer(dhp_agg(0, dfedit, unit), dhp_agg(1, dfedit, unit), dhp_agg(2, dfedit, unit), dhp_agg(3, dfedit, unit), dhp_agg(4, dfedit, unit), dhp_agg(5, dfedit, unit)).encode(
+    y=alt.Y(title='Swell Height'))
+
+    # Create a selection that chooses the nearest point & selects based on x-value
+    nearest = alt.selection_point(nearest=True, on='mouseover', fields=['week'], empty=True)
+
+    # Transparent selectors across the chart. This is what tells us
+    # the x-value of the cursor
+    selectors = alt.Chart(dfedit).mark_point().encode(
+        x=unit,
+        opacity=alt.value(0),
+    ).add_params(nearest)
+
+    #create the bottom chart, which is where you can select a certain timeframe. This is a line graph of the overall sig. wave height.
+    base_chart = alt.Chart(dfedit).encode(
+        x=unit,
+        y='lotusSigh_mt:Q'
+    )
+
+    chart = base_chart.mark_line().encode(
+        x=alt.X(unit),
+        y=alt.Y("lotusSigh_mt:Q")
+    ).properties(width=1250, height=300).add_params(
+        interval
+    )
+
+    #select in bottom chart
+    final = alt.layer(chart, selectors).properties(width=600, height=300)
+
+    #implement the selection to top graph 
+    finaladd = top_graph.encode(x=alt.X(unit, scale=alt.Scale(domain=interval)))
+
+    #present the top and bottom graph
+    view = alt.vconcat(finaladd, final).configure_axis(labelOverlap='parity')
+
+    return view
+
+
 app = Flask(__name__)
 
 @app.route('/get-seasonal-spec')
@@ -733,6 +818,12 @@ def update_chart():
     
     return jsonify(chart_spec)
 
+@app.route('/partition_height_period_update', methods=['GET'])
+def partition_height_period_update():
+    #added by Millie
+    partition_height_period_unit = request.args.get('partition_height_period_unit', 'agg_by_date')
+    return jsonify(partition_height_period_selection(partition_height_period_unit).to_dict())
+
 @app.route('/')
 def home():
 
@@ -760,6 +851,10 @@ def home():
     aggregated_data1 = process_data(variable1, aggregation1)
     chart1_spec = generate_line_chart(aggregated_data1, variable1, aggregation1).to_dict()
 
+    #added by Millie:
+    partition_height_period_unit = request.args.get('partition_height_period_unit', default='agg_by_date')
+    partition_height_period_chart = partition_height_period_selection(partition_height_period_unit)
+
     return render_template('index.html',
                            seasonal_chart_spec=seasonal_chart_spec,
                            tide_influence_chart_spec=tide_influence_chart_spec,
@@ -771,6 +866,7 @@ def home():
                            big_chart1=big_chart1,
                            small_chart1=small_chart1,
                            chart1_spec=chart1_spec,
+                           partition_height_period_chart=partition_height_period_chart,
                            )
 
 if __name__ == '__main__':

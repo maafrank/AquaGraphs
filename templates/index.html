@@ -16,7 +16,7 @@
       <p class="tagline">Have you ever wondered about the mysteries of the ocean? On this website, we'll dive deep into the causes and variables affecting breaking wave height, exploring the hidden forces that shape our seas.</p>
       
       <section class="step" id="seasonal-trends">
-	<div>
+		<div>
           <h2>Unveiling Seasonal Patterns in Breaking Wave Heights</h2>
           <p>There are myriad factors influencing the dynamics of breaking waves, each interplaying in complex ways. Among these, seasonal variations stand out for their profound impact, dictating not just the rhythm of life in the ocean, but also shaping the experiences of marine enthusiasts and professionals alike. In this section, we delve into the seasonal data, aiming to uncover trends that highlight the cyclical nature of our seas.</p>
           
@@ -31,13 +31,14 @@
           
           <p>This understanding not only enriches the appreciation of every surfer and ocean enthusiast who witnesses the ocean's might but also serves as a crucial insight for maritime safety and coastal management. By recognizing the seasonal peaks in wave heights, we can better prepare for the impact on coastal structures, shipping routes, and beach safety measures.</p>
 	  
-	  <div id="seasonal-chart"></div>
+	  	  <div id="seasonal-chart"></div>
           
-        </div>
+    	</div>
       </section>
+	
 
       <section class="step" id="tide-influence">
-	<div>
+		<div>
           <h2>The Tidal Effect: Unraveling the Influence on Wave Heights</h2>
           <p>The perpetual dance of the Earth, Moon, and Sun not only marks the passage of time but also sculpts the ocean's surface. Tides — the long-period waves that roll around the planet — are the result of the celestial tug-of-war, and they hold sway over the marine realm. By examining the tides, we glimpse the subtle yet powerful forces that shape our shorelines and influence the creation of waves that surfers seek.</p>
           
@@ -45,7 +46,7 @@
           
           <p>By analyzing how different tide levels correlate with wave heights, we uncover patterns that are both predictable in their rhythm and variable in their expression. This analysis is not just for the academically curious; it has practical implications for coastal planning, marine navigation, and the leisurely pursuits of beachgoers and surfers alike. Recognizing the tide's influence allows for better prediction of wave conditions, contributing to safety and enjoyment along our coasts.</p>
 
-	  <h2>Tide's Influence on Wave Height</h2>
+	  	  <h2>Tide's Influence on Wave Height</h2>
           <p>The interplay between tidal forces and wave heights is beautifully illustrated in the chart below. The blue line traces the ebb and flow of tide levels over time, while the red line captures the corresponding peaks in wave heights. As the tides rise and fall, driven by the gravitational pull of the moon and sun, we can observe a pattern in how the waves respond to these celestial rhythms.</p>
           
           <p>Notice the periodic nature of the blue tide line, which reflects the regularity of the tidal cycles. In contrast, the red line showing wave heights appears more erratic, indicating the variety of factors that contribute to wave formation beyond just tides, such as wind, weather patterns, and geological features of the coastline.</p>
@@ -54,190 +55,198 @@
           
           <div id="tide-influence-chart" data-spec="{{ tide_influence_chart_spec | tojson | safe }}"></div>
 
-	</div>
+		</div>
       </section>
       
       <section class="step" id="swell_dir">
-	<div>
+		<div>
           
           <h2>Understanding Swell Direction and Wave Height</h2>
-	  <p>
-	    Swell direction is the direction from which ocean waves are approaching. It is an essential factor in surf forecasting as it influences both the size and quality of the waves at a particular beach. Swells are created by winds blowing across the surface of the ocean, often from storms hundreds or thousands of miles away. When these swells reach the coastline, they transform into the breaking waves that surfers ride.
-	  </p>
-	  <p>
-	    The visualization on the left shows the average swell direction in degrees around Morro Bay, with the circular heatmap representing the average wave heights corresponding to each direction. The color intensity indicates the wave height, with warmer colors representing higher waves.
-	  </p>
-	  <p>
-	    Notably, Morro Rock, a prominent landmark, can be seen in the map on the right. It acts as a natural breakwater, influencing the local wave patterns. Our data indicates that swells originating from the south tend to produce larger waves in Morro Bay. This phenomenon can be attributed to the specific bathymetry of the seabed and the shape of the coastline which can amplify southern swells.
-	  </p>
-	  <p>
-	    Understanding the relationship between swell direction and wave height is crucial for coastal activities such as surfing, boating, and shoreline construction. By analyzing the patterns displayed in the heatmap, enthusiasts and professionals can make informed decisions for a variety of purposes.
-	  </p>
+	  	  <p>
+	        Swell direction is the direction from which ocean waves are approaching. It is an essential factor in surf forecasting as it influences both the size and quality of the waves at a particular beach. Swells are created by winds blowing across the surface of the ocean, often from storms hundreds or thousands of miles away. When these swells reach the coastline, they transform into the breaking waves that surfers ride.
+	  	  </p>
+	      <p>
+	        The visualization on the left shows the average swell direction in degrees around Morro Bay, with the circular heatmap representing the average wave heights corresponding to each direction. The color intensity indicates the wave height, with warmer colors representing higher waves.
+	  	  </p>
+	 	  <p>
+	        Notably, Morro Rock, a prominent landmark, can be seen in the map on the right. It acts as a natural breakwater, influencing the local wave patterns. Our data indicates that swells originating from the south tend to produce larger waves in Morro Bay. This phenomenon can be attributed to the specific bathymetry of the seabed and the shape of the coastline which can amplify southern swells.
+	  	  </p>
+	  	  <p>
+	    	Understanding the relationship between swell direction and wave height is crucial for coastal activities such as surfing, boating, and shoreline construction. By analyzing the patterns displayed in the heatmap, enthusiasts and professionals can make informed decisions for a variety of purposes.
+	  	  </p>
           <div id="swell-dir-chart" data-spec="{{ swell_direction_chart_spec | tojson | safe }}"></div>
-	  <img src="{{ url_for('static', filename='MorroBayRockSwellDirection.png') }}" alt="Morro Bay Rock">
+	  	  <img src="{{ url_for('static', filename='MorroBayRockSwellDirection.png') }}" alt="Morro Bay Rock">
 	  
-	</div>
+		</div>
       </section>
 
       <section class="step" id="peak_period">
-	<div>
-	  <h2>What is Wave Period?</h2>
-	  <p>
-            The <strong>wave period</strong> is the time it takes for two successive wave crests (or troughs) to pass a fixed point. It is an essential metric for understanding the energy and movement of waves. Longer wave periods indicate waves that have traveled across vast distances, often leading to well-formed, powerful waves that are favored by surfers.
-	  </p>
-	  <p>
-            In the accompanying illustration, you can see that the distance between successive wave crests is greater for waves with a longer period. These waves typically originate from storms far out at sea and can travel large distances to reach the shore, bringing with them more energy, which translates into higher wave heights.
-	  </p>
-	  <p>
-            Conversely, waves with shorter periods are typically more locally generated and have less energy. These waves are closer together, and while they may occur more frequently, they are generally smaller in size and less powerful than their long-period counterparts.
-	  </p>
-	  <p>
-            By studying peak period data alongside wave heights, we can gain insights into the potential impact of waves on coastal areas, which is crucial for activities such as surfing, boating, and coastal management.
-	  </p>
-          <img src="{{ url_for('static', filename='PeakPeriod.jpeg') }}" alt="Peak Period">
-	  <!--<div id="peak-period-line-chart" data-spec="{{ peak_period_line_chart_spec | tojson | safe }}"></div>-->
+		<div>
+	  		<h2>What is Wave Period?</h2>
+			<p>
+					The <strong>wave period</strong> is the time it takes for two successive wave crests (or troughs) to pass a fixed point. It is an essential metric for understanding the energy and movement of waves. Longer wave periods indicate waves that have traveled across vast distances, often leading to well-formed, powerful waves that are favored by surfers.
+			</p>
+			<p>
+					In the accompanying illustration, you can see that the distance between successive wave crests is greater for waves with a longer period. These waves typically originate from storms far out at sea and can travel large distances to reach the shore, bringing with them more energy, which translates into higher wave heights.
+			</p>
+			<p>
+					Conversely, waves with shorter periods are typically more locally generated and have less energy. These waves are closer together, and while they may occur more frequently, they are generally smaller in size and less powerful than their long-period counterparts.
+			</p>
+			<p>
+					By studying peak period data alongside wave heights, we can gain insights into the potential impact of waves on coastal areas, which is crucial for activities such as surfing, boating, and coastal management.
+			</p>
+            <img src="{{ url_for('static', filename='PeakPeriod.jpeg') }}" alt="Peak Period">
+	  		<!--<div id="peak-period-line-chart" data-spec="{{ peak_period_line_chart_spec | tojson | safe }}"></div>-->
 
-	  <h2>Correlation between Peak Period and Wave Height</h2>
-	  <p>
-            The chart below illustrates the relationship between the <strong>average peak period</strong> of waves and their corresponding <strong>maximum wave heights</strong>. The average peak period, measured in seconds, refers to the average time interval between successive wave crests.
-	  </p>
-	  <p>
-            As indicated by the trend line in red, there is a positive correlation between the average peak period and wave height. In essence, this suggests that longer period waves tend to have greater heights. Such waves have typically traveled longer distances, undisturbed, allowing them to gather more energy and, consequently, form larger waves upon reaching the coast.
-	  </p>
-	  <p>
-            This relationship is significant for a variety of coastal activities. For surfers, longer period waves can provide a more powerful and sustained ride. For coastal engineers and planners, understanding this correlation aids in the design of structures and the implementation of coastal management strategies to mitigate erosion and flooding risks.
-	  </p>
-          <div id="peak-period-chart" data-spec="{{ peak_period_chart_spec | tojson | safe }}"></div>
-	  
-	</div>
+	  		<h2>Correlation between Peak Period and Wave Height</h2>
+	  		<p>
+              	The chart below illustrates the relationship between the <strong>average peak period</strong> of waves and their corresponding <strong>maximum wave heights</strong>. The average peak period, measured in seconds, refers to the average time interval between successive wave crests.
+	  		</p>
+			<p>
+				As indicated by the trend line in red, there is a positive correlation between the average peak period and wave height. In essence, this suggests that longer period waves tend to have greater heights. Such waves have typically traveled longer distances, undisturbed, allowing them to gather more energy and, consequently, form larger waves upon reaching the coast.
+			</p>
+			<p>
+				This relationship is significant for a variety of coastal activities. For surfers, longer period waves can provide a more powerful and sustained ride. For coastal engineers and planners, understanding this correlation aids in the design of structures and the implementation of coastal management strategies to mitigate erosion and flooding risks.
+			</p>
+          	<div id="peak-period-chart" data-spec="{{ peak_period_chart_spec | tojson | safe }}"></div>
+		</div>
       </section>
 
       <section class="step" id="wave_partitions_explanation">
-	<div>
-	  <h2>Understanding Wave Partitions</h2>
-	  <p>
-            Wave partitions represent the division of the total significant wave height into components that correspond to different wave systems or swells present in the ocean at any given time. Each partition captures a unique set of characteristics—such as direction, period, and height—associated with a portion of the overall wave structure.
-	  </p>
-	  <p>
-            In our data, we observe six partitions labeled <code>lotusSighPartX_mt</code>, where <code>X</code> ranges from 0 to 5. Each partition measures the significant wave height for a particular wave system, with the sum of these partitions providing an approximation of the total significant wave height, denoted as <code>lotusSigh_mt</code>.
-	  </p>
-	  <p>
-            The total significant wave height <code>lotusSigh_mt</code> is a commonly used oceanographic metric that represents the average height of the highest one-third of waves in the middle of the ocean. It is a key indicator of the overall energy present in the wave field and is not to be confused with breaking wave height, which is observed near the shore.
-	  </p>
-	  <p>
-            By analyzing wave partitions, we can gain a more nuanced understanding of the wave field's complexity and how different wave systems interact. This insight is invaluable for applications such as maritime navigation, offshore operations, and surf forecasting.
-	  </p>
+		<div>
+	  		<h2>Understanding Wave Partitions</h2>
+			<p>
+				Wave partitions represent the division of the total significant wave height into components that correspond to different wave systems or swells present in the ocean at any given time. Each partition captures a unique set of characteristics—such as direction, period, and height—associated with a portion of the overall wave structure.
+			</p>
+			<p>
+				In our data, we observe six partitions labeled <code>lotusSighPartX_mt</code>, where <code>X</code> ranges from 0 to 5. Each partition measures the significant wave height for a particular wave system, with the sum of these partitions providing an approximation of the total significant wave height, denoted as <code>lotusSigh_mt</code>.
+			</p>
+			<p>
+				The total significant wave height <code>lotusSigh_mt</code> is a commonly used oceanographic metric that represents the average height of the highest one-third of waves in the middle of the ocean. It is a key indicator of the overall energy present in the wave field and is not to be confused with breaking wave height, which is observed near the shore.
+			</p>
+			<p>
+				By analyzing wave partitions, we can gain a more nuanced understanding of the wave field's complexity and how different wave systems interact. This insight is invaluable for applications such as maritime navigation, offshore operations, and surf forecasting.
+			</p>
 
-	  <div id="swell-partitions-chart" data-spec="{{ swell_partitions_chart_spec | tojson | safe }}"></div>
+			<div id="swell-partitions-chart" data-spec="{{ swell_partitions_chart_spec | tojson | safe }}"></div>
 
-	  <h2>Weighted Sum of Wave Partitions vs. Total Significant Wave Height</h2>
-	  <p>
-            The chart visualizes the relationship between the weighted sum of wave partitions and the total significant wave height, denoted as <code>lotusSigh_mt</code>. Each partition represents a segment of the wave system and has been weighted differently to approximate the total significant wave height. The weights used are [1, 0.6, 0.5, 0.4, 0.3, 0.2] for the partitions respectively, acknowledging that not all partitions contribute equally to the observed wave height.
-	  </p>
-	  <p>
-            It's important to note that while there is a strong correlation, the sum of partitions does not perfectly equal the total significant wave height. This discrepancy may be due to various factors, such as the interaction between different wave systems, or the methodology used to measure and record these metrics.
-	  </p>
-	  <p>
-            The variable <code>lotusSigh_mt</code> represents the significant wave height in the middle of the ocean, which differs from breaking wave heights observed near the coast. Significant wave height is a statistical measure that denotes the mean height of the highest third of waves in a wave spectrum, averaged over a period of time. This measure is critical for understanding the general sea conditions far from shore, and is particularly useful for navigation, marine forecasting, and offshore operations.
-	  </p>
-	  <div id="swell-partitions-chart2" data-spec="{{ swell_partitions_chart_spec2 | tojson | safe }}"></div>
-
-	</div>
+			<h2>Weighted Sum of Wave Partitions vs. Total Significant Wave Height</h2>
+			<p>
+				The chart visualizes the relationship between the weighted sum of wave partitions and the total significant wave height, denoted as <code>lotusSigh_mt</code>. Each partition represents a segment of the wave system and has been weighted differently to approximate the total significant wave height. The weights used are [1, 0.6, 0.5, 0.4, 0.3, 0.2] for the partitions respectively, acknowledging that not all partitions contribute equally to the observed wave height.
+			</p>
+			<p>
+				It's important to note that while there is a strong correlation, the sum of partitions does not perfectly equal the total significant wave height. This discrepancy may be due to various factors, such as the interaction between different wave systems, or the methodology used to measure and record these metrics.
+			</p>
+			<p>
+				The variable <code>lotusSigh_mt</code> represents the significant wave height in the middle of the ocean, which differs from breaking wave heights observed near the coast. Significant wave height is a statistical measure that denotes the mean height of the highest third of waves in a wave spectrum, averaged over a period of time. This measure is critical for understanding the general sea conditions far from shore, and is particularly useful for navigation, marine forecasting, and offshore operations.
+			</p>
+			<div id="swell-partitions-chart2" data-spec="{{ swell_partitions_chart_spec2 | tojson | safe }}"></div> 	
+		</div>
       </section>
 
       <section class="step" id="big_chart">
-	<div>
-	  <h2>Comparative Analysis of Wave Conditions</h2>
-	  <p>
-	    This section delves into the comparison of conditions during the top highest and smallest wave events. 
-	    In the provided visualizations, we track several variables over time to discern patterns and influences.
-	  </p>
-	  <p>
-	    The blue line denotes wave height, indicating the vertical extent of waves during specific periods. 
-	    In contrast, the orange line reflects tide levels, providing insight into the gravitational pull effects 
-	    of the sun and moon during the same intervals.
-	  </p>
-	  <p>
-	    Each point's color corresponds to the swell direction, with distinct colors representing different compass directions, 
-	    such as North (N), Northeast (NE), and so on. The size of each dot correlates with the wave period, measured in seconds, 
-	    where larger dots signify longer periods. This confluence of factors — wave height, tide level, swell direction, and 
-	    wave period — intertwines to shape the surfing conditions at any given moment.
-	  </p>
+		<div>
+	  		<h2>Comparative Analysis of Wave Conditions</h2>
+	  		<p>
+	    		This section delves into the comparison of conditions during the top highest and smallest wave events. 
+	    		In the provided visualizations, we track several variables over time to discern patterns and influences.
+	  		</p>
+			<p>
+				The blue line denotes wave height, indicating the vertical extent of waves during specific periods. 
+				In contrast, the orange line reflects tide levels, providing insight into the gravitational pull effects 
+				of the sun and moon during the same intervals.
+			</p>
+			<p>
+				Each point's color corresponds to the swell direction, with distinct colors representing different compass directions, 
+				such as North (N), Northeast (NE), and so on. The size of each dot correlates with the wave period, measured in seconds, 
+				where larger dots signify longer periods. This confluence of factors — wave height, tide level, swell direction, and 
+				wave period — intertwines to shape the surfing conditions at any given moment.
+			</p>
 
-	  <h2>Insights from Wave Data</h2>
-	  <p>
-	    Each graph depicted represents a detailed snapshot of wave activity over the course of a week, providing hourly data that uncovers the rhythms of the sea. Through careful observation, we can glean several key insights:
-	  </p>
-	  <ul>
-	    <li>The <strong>largest waves</strong> tend to occur between December and January, suggesting a seasonal pattern where winter storms contribute to more significant wave formations.</li>
-	    <li>Conversely, the <strong>smallest waves</strong> are observed between July and November, a period typically associated with calmer ocean conditions in this region.</li>
-	    <li>A notable trend is that the largest waves often coincide with swells coming from the west. Given Morro Bay's location on the west coast, these swells travel unimpeded across the vast expanse of the Pacific, gathering size and power.</li>
-	    <li>The <strong>influence of tide</strong> on wave height appears minimal, indicating that other factors may play a more dominant role in wave formation during these peak events.</li>
-	    <li>The <strong>peak period</strong> data, representing the time between successive waves, shows only a slight correlation with wave height, although larger waves do have a tendency to have a longer peak period.</li>
-	  </ul>
-	  <p>
-	    These observations highlight the complexity of oceanic behavior and the multitude of factors that contribute to the surfing conditions experienced at Morro Bay.
-	  </p>
-          <div id="big-chart1" data-spec="{{ big_chart1 | tojson | safe }}"></div>
-	  <div id="small-chart1" data-spec="{{ small_chart1 | tojson | safe }}"></div>
+			<h2>Insights from Wave Data</h2>
+			<p>
+				Each graph depicted represents a detailed snapshot of wave activity over the course of a week, providing hourly data that uncovers the rhythms of the sea. Through careful observation, we can glean several key insights:
+			</p>
+			<ul>
+				<li>The <strong>largest waves</strong> tend to occur between December and January, suggesting a seasonal pattern where winter storms contribute to more significant wave formations.</li>
+				<li>Conversely, the <strong>smallest waves</strong> are observed between July and November, a period typically associated with calmer ocean conditions in this region.</li>
+				<li>A notable trend is that the largest waves often coincide with swells coming from the west. Given Morro Bay's location on the west coast, these swells travel unimpeded across the vast expanse of the Pacific, gathering size and power.</li>
+				<li>The <strong>influence of tide</strong> on wave height appears minimal, indicating that other factors may play a more dominant role in wave formation during these peak events.</li>
+				<li>The <strong>peak period</strong> data, representing the time between successive waves, shows only a slight correlation with wave height, although larger waves do have a tendency to have a longer peak period.</li>
+			</ul>
+			<p>
+				These observations highlight the complexity of oceanic behavior and the multitude of factors that contribute to the surfing conditions experienced at Morro Bay.
+			</p>
+				<div id="big-chart1" data-spec="{{ big_chart1 | tojson | safe }}"></div>
+			<div id="small-chart1" data-spec="{{ small_chart1 | tojson | safe }}"></div>
 	  
-	</div>
+		</div>
       </section>
       
       <section class="step" id="interactive">
 
-	<h1>Interactive Data Exploration</h1>
-	<p>
-	  This section of our platform empowers you to dive into the intricacies of oceanographic data. With our interactive tools, you have the freedom to select a specific time frame using the Date Range Filter, choose from a variety of ocean variables, and view the data aggregated over different time scales.
-	</p>
-	<p>
-	  We provide multiple visualization formats, including line charts, area charts, scatter plots, and bar charts, to facilitate a comprehensive understanding of the patterns and trends within the data. Whether you’re curious about the highest waves or the calmest tides, our platform will visualize the information in a format that best suits your investigative needs.
-	</p>
-	<p>
-	  Each variable comes with a detailed explanation, ensuring that you’re informed about the significance and impact of each measurement. From the experienced researcher to the casual enthusiast, our tools are designed to enhance learning and discovery for all.
-	</p>
+		<h1>Interactive Data Exploration</h1>
+		<p>
+	  		This section of our platform empowers you to dive into the intricacies of oceanographic data. With our interactive tools, you have the freedom to select a specific time frame using the Date Range Filter, choose from a variety of ocean variables, and view the data aggregated over different time scales.
+		</p>
+		<p>
+			We provide multiple visualization formats, including line charts, area charts, scatter plots, and bar charts, to facilitate a comprehensive understanding of the patterns and trends within the data. Whether you’re curious about the highest waves or the calmest tides, our platform will visualize the information in a format that best suits your investigative needs.
+		</p>
+		<p>
+			Each variable comes with a detailed explanation, ensuring that you’re informed about the significance and impact of each measurement. From the experienced researcher to the casual enthusiast, our tools are designed to enhance learning and discovery for all.
+		</p>
 	
-	<h2>Date Range Filter</h2>
-	<label for="startDate">Start Date:</label>
-	<input type="date" id="startDate" name="start-date" value="2019-10-01" min="2019-01-01" max="2023-12-31" onchange="updateChart()">
+		<h2>Date Range Filter</h2>
+		<label for="startDate">Start Date:</label>
+		<input type="date" id="startDate" name="start-date" value="2019-10-01" min="2019-01-01" max="2023-12-31" onchange="updateChart()">
 	
-	<label for="endDate">End Date:</label>
-	<input type="date" id="endDate" name="end-date" value="2023-12-31" min="2019-01-01" max="2023-12-31" onchange="updateChart()">
-      <!--</section>
+		<label for="endDate">End Date:</label>
+		<input type="date" id="endDate" name="end-date" value="2023-12-31" min="2019-01-01" max="2023-12-31" onchange="updateChart()">
+      	<!--</section>
       
        
-      <section>-->
+      	<section>-->
 
-	<p id="chart1Description">Select a variable to see its description.</p>
-	<div>
+		<p id="chart1Description">Select a variable to see its description.</p>
+		<div>
 	  
           <select id="variable1" onchange="loadChartData('1')">Update Chart 1>
-            <option value="lotusSigh_mt">Wave Height (mt)</option>
-            <option value="tide_ft">Tide (ft)</option>
-	    <option value="lotusMinBWH_ft">lotusMinBWH_ft</option>
-	    <option value="lotusMaxBWH_ft">lotusMaxBWH_ft:</option>
-	    <option value="lotusSighPartX_mt">lotusSighPartX_mt</option>
-	    <option value="lotusTPPartX_sec">lotusTPPartX_sec</option>
-	    <option value="lotusPDirPartX_deg">lotusPDirPartX_deg</option>
-	    <option value="lotusSpreadPartX_deg">lotusSpreadPartX_deg</option>
-            <!-- Add more options as needed -->
-          </select>
+			<option value="lotusSigh_mt">Wave Height (mt)</option>
+			<option value="tide_ft">Tide (ft)</option>
+			<option value="lotusMinBWH_ft">lotusMinBWH_ft</option>
+			<option value="lotusMaxBWH_ft">lotusMaxBWH_ft:</option>
+			<option value="lotusSighPartX_mt">lotusSighPartX_mt</option>
+			<option value="lotusTPPartX_sec">lotusTPPartX_sec</option>
+			<option value="lotusPDirPartX_deg">lotusPDirPartX_deg</option>
+			<option value="lotusSpreadPartX_deg">lotusSpreadPartX_deg</option>
+				<!-- Add more options as needed -->
+      	  </select>
 	  
-          <select id="aggregation1" onchange="loadChartData('1')">Update Chart 1>
-            <option value="Day">Day</option>
-            <option value="Week">Week</option>
-	    <option value="Month">Month</option>
-	    <option value="Season">Season</option>
-	    <option value="Season_Year">Season_Year</option>
-	    <option value="Year">Year</option>
-            <!-- Add more options as needed -->
-          </select>
+		  <select id="aggregation1" onchange="loadChartData('1')">Update Chart 1>
+			<option value="Day">Day</option>
+			<option value="Week">Week</option>
+			<option value="Month">Month</option>
+			<option value="Season">Season</option>
+			<option value="Season_Year">Season_Year</option>
+			<option value="Year">Year</option>
+			<!-- Add more options as needed -->
+		  </select>
 	  
+	  	</div>
+	  	<div id="chart1"></div>
+	
+	  <h2>Partition Height, Period, Direction and Overall Wave Height</h2>
+        <select id="partition_height_period_unit" onchange="load_partition_height_period()">Update Chart 1>
+          <option value="agg_by_date">Day</option>
+    	  <option value="agg_by_week">Week</option>
+            <!-- Add more options as needed -->
+        </select>
+	  
+	  <div id="partition_height_period"></div>
 	</div>
-	<div id="chart1"></div>
-      </section>
+    </section>
 
-      <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   </body>
   </div>
 </html>

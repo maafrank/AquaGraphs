@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     fetchChartDataAndEmbed('/get-swell-partitions-spec2', '#swell-partitions-chart2');
     fetchChartDataAndEmbed('/get-big-chart1', '#big-chart1');
     fetchChartDataAndEmbed('/get-small-chart1', '#small-chart1');
+	fetchChartDataAndEmbed('/partition_height_period_update', '#partition_height_period');
 });
 
 function fetchChartDataAndEmbed(apiEndpoint, embedContainerId) {
@@ -173,4 +174,17 @@ function updateDescription(chartId, variable) {
 	// Add more cases if needed
 	    }
     descriptionElement.innerHTML = description;
+}
+
+// Function to load and update partition_height_period
+function load_partition_height_period() {
+	const partition_height_period_unit = document.getElementById('partition_height_period_unit').value;	  
+    const unit = document.getElementById(`partition_height_period_unit`).value;
+	    fetch(`/partition_height_period_update?partition_height_period_unit=${partition_height_period_unit}`)
+		.then(response => response.json())
+		.then(chartSpec => {
+		    vegaEmbed(`#partition_height_period`, chartSpec);
+		})
+		.catch(error => console.error('Error loading chart:', error));
+    
 }
