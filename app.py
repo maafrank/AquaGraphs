@@ -287,12 +287,18 @@ def generate_tide_influence_chart():
         alt.X('time_period:T', axis=alt.Axis(title='Time'))
     )
     
-    tide_line = base.mark_line(color='blue').encode(
-        alt.Y('tide_ft:Q', axis=alt.Axis(title='Tide Level (ft)'))
+    tide_line = base.mark_line(color='blue').transform_calculate(
+            color='"Tide Level (ft)"'
+        ).encode(
+        alt.Y('tide_ft:Q', axis=alt.Axis(title='Tide Level (ft)')),
+    alt.Color('color:N')
     )
     
-    wave_line = base.mark_line(color='red').encode(
-        alt.Y('lotusMaxBWH_ft:Q', axis=alt.Axis(title='Max Breaking Wave Height (ft)'))
+    wave_line = base.mark_line(color='red').transform_calculate(
+            color='"Max Breaking Wave Height (ft)"'
+        ).encode(
+        alt.Y('lotusMaxBWH_ft:Q', axis=alt.Axis(title='Max Breaking Wave Height (ft)')),
+    alt.Color('color:N')
     )
     
     final_chart = alt.layer(tide_line, wave_line).resolve_scale(
