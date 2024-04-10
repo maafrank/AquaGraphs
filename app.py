@@ -48,7 +48,7 @@ def process_data(variable, aggregation_level, start_date=None, end_date=None):
     elif aggregation_level == 'Season_Year':
         data['year'] = data['datetime'].dt.year
         data['season'] = data['datetime'].dt.month.apply(get_season)
-        data['time_period'] = data['season'] + '-' + data['year'].astype(str)
+        data['time_period'] = data['season'] + ' ' + data['year'].astype(str)
     elif aggregation_level == 'Year':
         data['time_period'] = data['datetime'].dt.year
 
@@ -254,7 +254,7 @@ def generate_seasonal_chart():
     # Process the data
     aggregated_data = process_data(variable, aggregation, start_date, end_date)
 
-    season_order = {'Winter': 0,'Spring': 1,'Summer': 2,'Fall': 3}
+    season_order = {'Spring': 0,'Summer': 1,'Fall': 2, 'Winter': 3}
 
     aggregated_data['season'] = aggregated_data['time_period'].str.extract(r'(Winter|Spring|Summer|Fall)')
     aggregated_data['year'] = aggregated_data['time_period'].str.extract(r'(\d{4})').astype(int)
@@ -265,15 +265,12 @@ def generate_seasonal_chart():
     # Create the chart
     chart = alt.Chart(aggregated_data).mark_bar().encode(
         x=alt.X('time_period:N', title='Time Period', sort=list(aggregated_data['time_period'])),
-        y=alt.Y(f'{variable}:Q', title='Value'),
+        y=alt.Y(f'{variable}:Q', title='Average Breaking Wave Height (ft)'),
         color=alt.Color('season:N', sort=list(season_order), legend=alt.Legend(title="Season")),
-        tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title='Value')]
-    ).properties(
-        width=900,
-        height=600
+        tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title='Average Breaking Wave Height (ft)')]
     )
     
-    return chart
+    return format_chart(chart)
 
 def generate_tide_influence_chart():
     variable = 'tide_ft'
@@ -284,7 +281,7 @@ def generate_tide_influence_chart():
     # Process the data
     aggregated_data = process_data(variable, aggregation, start_date, end_date)
 
-    base = alt.Chart(aggregated_data).encode(
+    base = alt.Chart(aggregated_data, width="container").encode(
         alt.X('time_period:T', axis=alt.Axis(title='Time'))
     )
     
@@ -304,12 +301,9 @@ def generate_tide_influence_chart():
     
     final_chart = alt.layer(tide_line, wave_line).resolve_scale(
         y='independent'
-    ).properties(
-        width=900,
-        height=600
     )
 
-    return final_chart
+    return format_chart(final_chart)
 
 def generate_swell_direction_chart():
     variable = 'lotusPDirPartX_deg'
@@ -327,7 +321,7 @@ def generate_swell_direction_chart():
     aggregated_data['direction_radians'] = np.deg2rad(aggregated_data['average_swell_direction_deg'])
     
     # Create a base chart
-    base = alt.Chart(aggregated_data).encode(
+    base = alt.Chart(aggregated_data, width="container").encode(
         theta=alt.Theta('direction_radians:Q', stack=True), 
         radius=alt.Radius('wave_height:Q', scale=alt.Scale(type='sqrt', zero=True, rangeMin=20)), 
         color=alt.Color('wave_height:Q', scale=alt.Scale(scheme="inferno")),  
@@ -337,12 +331,9 @@ def generate_swell_direction_chart():
         ]
     )
     
-    chart = base.mark_arc(innerRadius=10).properties(
-        width=390,
-        height=390
-    )
+    chart = base.mark_arc(innerRadius=10)
     
-    return chart
+    return format_chart(chart)
 
 def generate_peak_period_chart():
     variable = 'lotusTPPartX_sec'
@@ -358,10 +349,10 @@ def generate_peak_period_chart():
     min_peak_period = aggregated_data['average_peak_period'].min()
     max_peak_period = aggregated_data['average_peak_period'].max()
 
-    base_chart = alt.Chart(aggregated_data).properties(
+    base_chart = alt.Chart(aggregated_data, width="container").properties(
         width=900,
         height=600,
-        title='Relationship between Average Peak Period and Wave Height'
+        # title='Relationship between Average Peak Period and Wave Height'
     )
     
     # Define the scatter plot.
@@ -393,7 +384,7 @@ def generate_peak_period_chart():
     final_chart = scatter_chart + regression_chart
     
     # Return the final combined chart
-    return final_chart
+    return format_chart(final_chart)
 
 def generate_peak_period_line_chart():
     variable = 'lotusTPPartX_sec'
@@ -409,17 +400,15 @@ def generate_peak_period_line_chart():
     min_peak_period = aggregated_data['average_peak_period'].min()
     max_peak_period = aggregated_data['average_peak_period'].max()
 
-    line_chart = alt.Chart(aggregated_data).mark_line().encode(
+    line_chart = alt.Chart(aggregated_data, width="container").mark_line().encode(
         x=alt.X('time_period:T', title='Time Period'),
         y=alt.Y('average_peak_period:Q', title='Average Peak Period (seconds)' ,scale=alt.Scale(domain=(min_peak_period, max_peak_period))), 
         tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('average_peak_period:Q', title='Average Peak Period')]
     ).properties(
-        width=900,
-        height=600,
         title='Average Peak Period Over Time'
     )
     
-    return line_chart
+    return format_chart(line_chart)
 
 
 def generate_swell_partitions_chart():
@@ -433,7 +422,7 @@ def generate_swell_partitions_chart():
     # Base chart configuration
     base = alt.Chart(aggregated_data).encode(
         x=alt.X('time_period', type=get_x_axis_type(aggregation), title='Time Period'),
-    ).properties(width=300, height=200)
+    ).properties(width="container", height="container")
 
     global_min = aggregated_data[[variable.replace("X", str(i)) for i in range(6)]].min().min()
     global_max = aggregated_data[[variable.replace("X", str(i)) for i in range(6)]].max().max()
@@ -451,10 +440,12 @@ def generate_swell_partitions_chart():
     # Assuming we always have 6 charts ready to be displayed
     top_row = alt.hconcat(*partition_charts[:3])  # First 3 charts
     bottom_row = alt.hconcat(*partition_charts[3:])  # Last 3 charts
-    
+
     chart = alt.vconcat(top_row, bottom_row).resolve_scale(
         x='shared',
         y='shared'
+    ).properties(
+        background='rgba(255, 255, 255, 0)'
     )
     
     return chart
@@ -483,13 +474,13 @@ def generate_swell_partitions_chart2():
     min_value -= padding
 
     # Base chart configuration
-    base = alt.Chart(aggregated_data).encode(
+    base = alt.Chart(aggregated_data, width="container").encode(
         x=alt.X('time_period:T', title='Time Period'),
         y=alt.Y('sum_of_partitions:Q', scale=alt.Scale(domain=(min_value, max_value)), title='Sum of Partitions (meters)'),
     ).properties(
         width=900,
         height=600,
-        title='Weighted Sum of Wave Partitions vs. Total Significant Wave Height'
+        # title='Weighted Sum of Wave Partitions vs. Total Significant Wave Height'
     )
     
     # Create a line chart with dots for sum of partitions
@@ -521,7 +512,7 @@ def generate_swell_partitions_chart2():
     )
     
     # Return the combined chart
-    return combined_chart
+    return format_chart(combined_chart)
 
 def degrees_to_compass(deg):
     compass_brackets = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', 'N']
@@ -560,11 +551,11 @@ def generate_complex_chart(wave_set, tide, swell_dir, peak_period):
                            range=[10, 200])  # Size range from small to large
 
     # Chart for Tide levels
-    tide_chart = alt.Chart(merged_data).mark_line(color='orange').encode(
+    tide_chart = alt.Chart(merged_data, width="container").mark_line(color='orange').encode(
         x='time_period:T',
         y='tide_ft_tide:Q',
         tooltip=['time_period:T', 'tide_ft_tide:Q']
-    ) + alt.Chart(merged_data).mark_point(opacity=0.5).encode(
+    ) + alt.Chart(merged_data, width="container").mark_point(opacity=0.5).encode(
         x='time_period:T',
         y='tide_ft_tide:Q',
         size=alt.Size('average_peak_period_peak:Q', scale=size_scale, title='Peak Period (sec)'),  # Dynamic size based on peak period
@@ -573,11 +564,11 @@ def generate_complex_chart(wave_set, tide, swell_dir, peak_period):
     )
     
     # Chart for Wave heights
-    wave_height_chart = alt.Chart(merged_data).mark_line(color='blue').encode(
+    wave_height_chart = alt.Chart(merged_data, width="container").mark_line(color='blue').encode(
         x='time_period:T',
         y='lotusMaxBWH_ft_wave:Q',
         tooltip=['time_period:T', 'lotusMaxBWH_ft_wave:Q']
-    ) + alt.Chart(merged_data).mark_point(opacity=0.5).encode(
+    ) + alt.Chart(merged_data, width="container").mark_point(opacity=0.5).encode(
         x='time_period:T',
         y='lotusMaxBWH_ft_wave:Q',
         size=alt.Size('average_peak_period_peak:Q', scale=size_scale, title='Peak Period (sec)'),  # Dynamic size based on peak period
@@ -752,6 +743,29 @@ def partition_height_period_selection(unit = "agg_by_date"):
     view = alt.vconcat(finaladd, final).configure_axis(labelOverlap='parity')
 
     return view
+
+#####################
+## Format Charts ##
+#####################
+
+def format_chart(chart):
+    formatted_chart = chart.properties(
+        width="container",
+        height="container"
+    ).configure(
+        background='rgba(255, 255, 255, 0)',
+        font="Source Sans Pro"
+    ).configure_legend(
+        titleColor="#FFFFFF",
+        labelColor="#FFFFFF"
+    ).configure_axis(
+        gridColor="#FFFFFF",
+        labelColor="#FFFFFF",
+        domainColor="#FFFFFF",
+        tickColor="#FFFFFF",
+        titleColor="#FFFFFF"
+    )
+    return formatted_chart
 
 
 app = Flask(__name__)
