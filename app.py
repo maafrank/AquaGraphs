@@ -318,14 +318,6 @@ def generate_tide_influence_chart():
 
     return format_chart(final_chart)
 
-#def degree_to_cardinal(degree):
-#    """
-#    Convert degrees to cardinal directions.
-#    """
-#    sectors = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', 'N']
-#    idx = round(degree / 45) % 8
-#    return sectors[idx]
-
 def degree_to_cardinal(num):
     val = int((num / 22.5) + 0.5)
     arr = ["N", "NE", "NE", "NE", "E", "SE", "SE", "SE",
@@ -386,7 +378,7 @@ def generate_peak_period_chart():
     )
     
     # Define the scatter plot.
-    scatter_chart = base_chart.mark_point().encode(
+    scatter_chart = base_chart.mark_point(color='#00BCD4').encode(
         x=alt.X('average_peak_period', title='Average Peak Period (s)', scale=alt.Scale(domain=(min_peak_period, max_peak_period))),
         y=alt.Y('lotusMaxBWH_ft', title='Max Breaking Wave Height (ft)'),
         tooltip=['time_period', 'average_peak_period', 'lotusMaxBWH_ft']
@@ -405,7 +397,7 @@ def generate_peak_period_chart():
     })
     
     # Create an Altair chart for the regression line
-    regression_chart = alt.Chart(regression_df).mark_line(color='firebrick').encode(
+    regression_chart = alt.Chart(regression_df).mark_line(color='yellow').encode(
         x='average_peak_period',
         y='regression_line'
     )
