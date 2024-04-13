@@ -282,6 +282,7 @@ def generate_seasonal_chart():
     
     return format_chart(chart)
 
+
 def generate_tide_influence_chart():
     variable = 'tide_ft'
     aggregation = 'Week'
@@ -295,14 +296,16 @@ def generate_tide_influence_chart():
         alt.X('time_period:T', axis=alt.Axis(title='Time'))
     )
     
-    tide_line = base.mark_line(color='blue').transform_calculate(
-            color='"Tide Level (ft)"'
-        ).encode(
+    # Add a color column to your dataframe
+    aggregated_data['color'] = 'Tide Level (ft)'
+    
+    # Then in your chart encoding, you would use:
+    tide_line = base.mark_line().encode(
         alt.Y('tide_ft:Q', axis=alt.Axis(title='Tide Level (ft)')),
-    alt.Color('color:N')
+        alt.Color('color:N', legend=alt.Legend(title="Measurements"), scale=alt.Scale(domain=['Tide Level (ft)', 'Max Breaking Wave Height (ft)'], range=['#AADFEE', '#00FA9A']))
     )
     
-    wave_line = base.mark_line(color='red').transform_calculate(
+    wave_line = base.mark_line().transform_calculate(
             color='"Max Breaking Wave Height (ft)"'
         ).encode(
         alt.Y('lotusMaxBWH_ft:Q', axis=alt.Axis(title='Max Breaking Wave Height (ft)')),
@@ -314,6 +317,7 @@ def generate_tide_influence_chart():
     )
 
     return format_chart(final_chart)
+
 
 def generate_swell_direction_chart():
     variable = 'lotusPDirPartX_deg'
