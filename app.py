@@ -318,6 +318,19 @@ def generate_tide_influence_chart():
 
     return format_chart(final_chart)
 
+#def degree_to_cardinal(degree):
+#    """
+#    Convert degrees to cardinal directions.
+#    """
+#    sectors = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', 'N']
+#    idx = round(degree / 45) % 8
+#    return sectors[idx]
+
+def degree_to_cardinal(num):
+    val = int((num / 22.5) + 0.5)
+    arr = ["N", "NE", "NE", "NE", "E", "SE", "SE", "SE",
+           "S", "SW", "SW", "SW", "W", "NW", "NW", "NW"]
+    return arr[(val % 16)]
 
 def generate_swell_direction_chart():
     variable = 'lotusPDirPartX_deg'
@@ -330,6 +343,9 @@ def generate_swell_direction_chart():
     direction_columns = [col for col in aggregated_data.columns if "Part" in col]
     aggregated_data['average_swell_direction_deg'] = aggregated_data[direction_columns].mean(axis=1)
 
+    # Convert average swell direction from degrees to cardinal directions
+    aggregated_data['swell_direction'] = aggregated_data['average_swell_direction_deg'].apply(degree_to_cardinal)
+
     aggregated_data['wave_height'] = aggregated_data['lotusMaxBWH_ft']
     
     aggregated_data['direction_radians'] = np.deg2rad(aggregated_data['average_swell_direction_deg'])
@@ -340,7 +356,7 @@ def generate_swell_direction_chart():
         radius=alt.Radius('wave_height:Q', scale=alt.Scale(type='sqrt', zero=True, rangeMin=20)), 
         color=alt.Color('wave_height:Q', scale=alt.Scale(scheme="inferno")),  
         tooltip=[
-            alt.Tooltip('average_swell_direction_deg:N', title='Direction (degrees)'),
+            alt.Tooltip('swell_direction:N', title='Direction'),
             alt.Tooltip('wave_height:Q', title='Wave Height (ft)')
         ]
     )
