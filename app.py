@@ -378,7 +378,7 @@ def generate_peak_period_chart():
     )
     
     # Define the scatter plot.
-    scatter_chart = base_chart.mark_point(color='#00BCD4').encode(
+    scatter_chart = base_chart.mark_point(color='yellow').encode(
         x=alt.X('average_peak_period', title='Average Peak Period (s)', scale=alt.Scale(domain=(min_peak_period, max_peak_period))),
         y=alt.Y('lotusMaxBWH_ft', title='Max Breaking Wave Height (ft)'),
         tooltip=['time_period', 'average_peak_period', 'lotusMaxBWH_ft']
@@ -397,7 +397,7 @@ def generate_peak_period_chart():
     })
     
     # Create an Altair chart for the regression line
-    regression_chart = alt.Chart(regression_df).mark_line(color='yellow').encode(
+    regression_chart = alt.Chart(regression_df).mark_line(color='blue').encode(
         x='average_peak_period',
         y='regression_line'
     )
@@ -498,6 +498,13 @@ def generate_swell_partitions_chart2():
     max_value += padding
     min_value -= padding
 
+    custom_palette = {
+        'Spring': '#56B4E9',  # Sky blue
+        'Summer': '#E69F00',  # Orange yellow
+        'Fall':   '#F0E442',  # Bright yellow
+        'Winter': '#0072B2'   # Blue
+    }
+
     # Base chart configuration
     base = alt.Chart(aggregated_data, width="container").encode(
         x=alt.X('time_period:T', title='Time Period'),
@@ -509,12 +516,12 @@ def generate_swell_partitions_chart2():
     )
     
     # Create a line chart with dots for sum of partitions
-    sum_chart = base.mark_line(color='green', strokeWidth=3).encode(
+    sum_chart = base.mark_line(color='yellow', strokeWidth=3).encode(
         y=alt.Y('sum_of_partitions:Q', title='Sum of Partitions (meters)', scale=alt.Scale(domain=(min_value, max_value))),
         tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('sum_of_partitions:Q', title='Sum of Partitions')]
     )
     
-    sum_points = base.mark_point(color='green', size=50).encode(
+    sum_points = base.mark_point(color='yellow', size=50).encode(
         y=alt.Y('sum_of_partitions:Q', scale=alt.Scale(domain=(min_value, max_value))),
         tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('sum_of_partitions:Q', title='Sum of Partitions')]
     )
