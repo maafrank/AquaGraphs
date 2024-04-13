@@ -453,15 +453,18 @@ def generate_swell_partitions_chart():
     partition_charts = []
     for i in range(6):  # For partitions 0-5
         partition_variable = variable.replace("X",f"{i}")
-        partition_chart = base.mark_line().encode(
+        partition_chart = base.mark_line(color='yellow').encode(
             y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'Partition {i}'),
             tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'Partition {i}')]
+        ).properties(
+        width=300,
+        height=200,
         )
         partition_charts.append(partition_chart)
         
     # Assuming we always have 6 charts ready to be displayed
-    top_row = alt.hconcat(*partition_charts[:3])  # First 3 charts
-    bottom_row = alt.hconcat(*partition_charts[3:])  # Last 3 charts
+    top_row = alt.hconcat(*partition_charts[:3])# First 3 charts
+    bottom_row = alt.hconcat(*partition_charts[3:])# Last 3 charts
 
     chart = alt.vconcat(top_row, bottom_row).resolve_scale(
         x='shared',
