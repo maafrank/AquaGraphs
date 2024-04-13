@@ -36,7 +36,7 @@ def process_data(variable, aggregation_level, start_date=None, end_date=None):
     
     # Aggregation logic
     if aggregation_level == 'Hour':
-        data['time_period'] = data['datetime'].dt.to_period('H')
+        data['time_period'] = data['datetime'].dt.to_period('h')
     elif aggregation_level == 'Day':
         data['time_period'] = data['datetime'].dt.to_period('D')
     elif aggregation_level == 'Week':
@@ -262,11 +262,21 @@ def generate_seasonal_chart():
     aggregated_data['season_order'] = aggregated_data['season'].map(season_order)
     aggregated_data.sort_values(by=['year', 'season_order'], inplace=True)
 
+    custom_palette = {
+        'Spring': '#56B4E9',  # Sky blue
+        'Summer': '#E69F00',  # Orange yellow
+        'Fall':   '#F0E442',  # Bright yellow
+        'Winter': '#0072B2'   # Blue
+    }
+
+    # Map the 'season' to the custom color palette
+    aggregated_data['color'] = aggregated_data['season'].map(custom_palette)
+
     # Create the chart
     chart = alt.Chart(aggregated_data).mark_bar().encode(
         x=alt.X('time_period:N', title='Time Period', sort=list(aggregated_data['time_period'])),
         y=alt.Y(f'{variable}:Q', title='Average Breaking Wave Height (ft)'),
-        color=alt.Color('season:N', sort=list(season_order), legend=alt.Legend(title="Season")),
+        color=alt.Color('color:N', scale=None, legend=alt.Legend(title="Season")),
         tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title='Average Breaking Wave Height (ft)')]
     )
     
