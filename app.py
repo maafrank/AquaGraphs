@@ -302,7 +302,7 @@ def generate_tide_influence_chart():
     # Then in your chart encoding, you would use:
     tide_line = base.mark_line().encode(
         alt.Y('tide_ft:Q', axis=alt.Axis(title='Tide Level (ft)')),
-        alt.Color('color:N', legend=alt.Legend(title="Measurements"), scale=alt.Scale(domain=['Tide Level (ft)', 'Max Breaking Wave Height (ft)'], range=['#AADFEE', '#00FA9A']))
+        alt.Color('color:N', legend=alt.Legend(title="Measurements"), scale=alt.Scale(domain=['Tide Level (ft)', 'Max Breaking Wave Height (ft)'], range=['#00BCD4', '#F0E442']))
     )
     
     wave_line = base.mark_line().transform_calculate(
