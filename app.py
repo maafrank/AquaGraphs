@@ -87,14 +87,14 @@ def get_x_axis_type(aggregation_level):
 def generate_line_chart(aggregated_data, variable, aggregation_level):
     # Base chart configuration
     base = alt.Chart(aggregated_data).encode(
-        x=alt.X('time_period', type=get_x_axis_type(aggregation_level), title='Time Period'),
+        x=alt.X('time_period', type=get_x_axis_type(aggregation_level), title=None),
     )
     
     if "Part" not in variable:
-        base = base.properties(width=500, height=300)
+        base = base.properties(width=500, height=250)
         # Standard line chart for non-partitioned data
-        chart = base.mark_line().encode(
-            y=alt.Y(f'{variable}:Q', title=f'{variable}'),
+        chart = base.mark_line(color='yellow').encode(
+            y=alt.Y(f'{variable}:Q', title=None),
             tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title=f'{variable}')]
         )
     else:
@@ -107,8 +107,8 @@ def generate_line_chart(aggregated_data, variable, aggregation_level):
         partition_charts = []
         for i in range(6):  # For partitions 0-5
             partition_variable = variable.replace("X",f"{i}")
-            partition_chart = base.mark_line().encode(
-                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'{partition_variable} (Partition {i})'),
+            partition_chart = base.mark_line(color='yellow').encode(
+                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=None),
                 tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'{partition_variable} (Partition {i})')]
             )
             partition_charts.append(partition_chart)
@@ -127,14 +127,13 @@ def generate_line_chart(aggregated_data, variable, aggregation_level):
 def generate_bar_chart(aggregated_data, variable, aggregation_level):
     # Base chart configuration
     base = alt.Chart(aggregated_data).encode(
-        x=alt.X('time_period', type=get_x_axis_type(aggregation_level), title='Time Period'),
+        x=alt.X('time_period', type=get_x_axis_type(aggregation_level), title=None),
     )
     
     if "Part" not in variable:
-        base = base.properties(width=500, height=300)
-        # Standard bar chart for non-partitioned data
-        chart = base.mark_bar().encode(
-            y=alt.Y(f'{variable}:Q', title=f'{variable}'),
+        base = base.properties(width=500, height=250)
+        chart = base.mark_bar(color='yellow').encode(
+            y=alt.Y(f'{variable}:Q', title=None),
             tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title=f'{variable}')]
         )
     else:
@@ -147,8 +146,8 @@ def generate_bar_chart(aggregated_data, variable, aggregation_level):
         partition_charts = []
         for i in range(6):  # For partitions 0-5
             partition_variable = variable.replace("X",f"{i}")
-            partition_chart = base.mark_bar().encode(
-                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'{partition_variable} (Partition {i})'),
+            partition_chart = base.mark_bar(color='yellow').encode(
+                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=None),
                 tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'{partition_variable} (Partition {i})')]
             )
             partition_charts.append(partition_chart)
@@ -167,14 +166,14 @@ def generate_bar_chart(aggregated_data, variable, aggregation_level):
 def generate_scatter_chart(aggregated_data, variable, aggregation_level):
     # Base chart configuration
     base = alt.Chart(aggregated_data).encode(
-        x=alt.X('time_period', type=get_x_axis_type(aggregation_level), title='Time Period'),
+        x=alt.X('time_period', type=get_x_axis_type(aggregation_level), title=None),
     )
     
     if "Part" not in variable:
-        base = base.properties(width=500, height=300)
+        base = base.properties(width=500, height=250)
         # Standard point chart for non-partitioned data
-        chart = base.mark_point().encode(
-            y=alt.Y(f'{variable}:Q', title=f'{variable}'),
+        chart = base.mark_point(color='yellow').encode(
+            y=alt.Y(f'{variable}:Q', title=None),
             tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title=f'{variable}')]
         )
     else:
@@ -187,8 +186,8 @@ def generate_scatter_chart(aggregated_data, variable, aggregation_level):
         partition_charts = []
         for i in range(6):  # For partitions 0-5
             partition_variable = variable.replace("X",f"{i}")
-            partition_chart = base.mark_point().encode(
-                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'{partition_variable} (Partition {i})'),
+            partition_chart = base.mark_point(color='yellow').encode(
+                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=None),
                 tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'{partition_variable} (Partition {i})')]
             )
             partition_charts.append(partition_chart)
@@ -207,14 +206,14 @@ def generate_scatter_chart(aggregated_data, variable, aggregation_level):
 def generate_area_chart(aggregated_data, variable, aggregation_level):
     # Base chart configuration
     base = alt.Chart(aggregated_data).encode(
-        x=alt.X('time_period', type=get_x_axis_type(aggregation_level), title='Time Period'),
+        x=alt.X('time_period', type=get_x_axis_type(aggregation_level), title=None),
     )
     
     if "Part" not in variable:
-        base = base.properties(width=500, height=300)
+        base = base.properties(width=500, height=250)
         # Standard area chart for non-partitioned data
-        chart = base.mark_area().encode(
-            y=alt.Y(f'{variable}:Q', title=f'{variable}'),
+        chart = base.mark_area(color='yellow').encode(
+            y=alt.Y(f'{variable}:Q', title=None),
             tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{variable}:Q', title=f'{variable}')]
         )
     else:
@@ -227,8 +226,8 @@ def generate_area_chart(aggregated_data, variable, aggregation_level):
         partition_charts = []
         for i in range(6):  # For partitions 0-5
             partition_variable = variable.replace("X",f"{i}")
-            partition_chart = base.mark_area().encode(
-                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'{partition_variable} (Partition {i})'),
+            partition_chart = base.mark_area(color='yellow').encode(
+                y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=None),
                 tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'{partition_variable} (Partition {i})')]
             )
             partition_charts.append(partition_chart)
@@ -876,7 +875,7 @@ def update_chart():
     scatter = generate_scatter_chart(aggregated_data, variable, aggregation)
     area = generate_area_chart(aggregated_data, variable, aggregation)
     
-    chart_spec = ( (line | area ) & (scatter | bar) ).to_dict()
+    chart_spec = ( (line | area ) & (scatter | bar) ).properties(background='rgba(255, 255, 255, 0)').to_dict()
     
     return jsonify(chart_spec)
 

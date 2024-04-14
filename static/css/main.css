@@ -72,6 +72,19 @@ input, select, textarea {
 	appearance: none;
 }
 
+input[type="date"] {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: textfield; /* Chrome, Safari */
+  -ms-appearance: textfield; /* IE */
+  appearance: textfield;
+  
+  background-color: #fff; /* or any color that your design requires */
+  border: 1px solid #ccc; /* or any style that matches your design */
+  color: #333; /* text color, change if needed */
+  padding: 0.5em; /* adjust as needed */
+  font-size: 1em; /* adjust as needed */
+}
+
 /* Page */
 
 	@-moz-keyframes load-spinner {

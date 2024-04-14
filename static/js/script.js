@@ -86,89 +86,52 @@ function updateDescription(chartId, variable) {
     switch (variable) {
     case "lotusSigh_mt":
 	description = `
-     <h2><strong>lotusSigh_mt: Total significant wave height in meters:</strong></h2>
-    <p>In oceanography and marine forecasting, the "significant wave height" is a key statistic describing wave heights in water. It represents the average height of the highest one-third of waves observed over a specific period, providing a reliable estimation of wave conditions for mariners and surfers.</p>
-    <p>This metric is crucial for understanding sea conditions, focusing on larger waves that have greater impacts on activities such as surfing, boating, and coastal engineering. The "mt" signifies measurements in meters, adhering to international standards for scientific and navigational purposes.</p>
-    <p>Essentially, it indicates the average height of the highest one-third of waves at a location, measured in meters, vital for predicting surfing and sea conditions.</p>
+     <h2><strong>Wave Height (mt): Average High Wave Height in Meters</strong></h2>
+<p>"Significant wave height" is the term used to describe the average of the tallest one-third of waves in the sea, which gives sailors and surfers a good idea of what to expect out on the water. It's measured in meters, following the global standard, and helps predict the conditions for various ocean activities.</p>
   `;
 	break;
     case "tide_ft":
 	description = `
-     <h2><strong>tide_ft: Tide level in feet:</strong></h2>
-    <p>Represents the tide level, crucial for oceanographic data and surf forecasting, showing the sea level at a specific time and location relative to a standard reference point. Tides, caused by gravitational interactions between Earth, Moon, and Sun, are essential for understanding:</p>
-    <ul>
-      <li><strong>Surfing and Coastal Activities:</strong> Tides affect wave shapes and quality, critical for selecting the best surf times.</li>
-      <li><strong>Marine Navigation:</strong> Tides influence water body depths, vital for safe boat and ship navigation.</li>
-      <li><strong>Coastal Management:</strong> Tides play a role in coastal erosion, sediment deposition, and marine life distribution, important for coastal planning and environmental management.</li>
-      <li><strong>Fishing:</strong> Tidal levels impact marine life behavior and locations, important for fishing activities.</li>
-    </ul>
-    <p>The "_ft" indicates measurements in feet, commonly used in the United States for distance and height.</p>
+     <h2><strong>Tide (ft): Tide Height in Feet</strong></h2>
+<p>This measures how high the tide is, important for anyone who needs to know sea levels, from surfers picking the best waves to sailors ensuring safe passage. Tides affect not just water depth but also the health of coastlines and marine habitats, playing a big part in activities like fishing. The "ft" shows that the height is in feet, which is the standard in the U.S. for such measurements.</p>
   `;
 	break;
     case "lotusMinBWH_ft":
 	description = `
-     <h2><strong>lotusMinBWH_ft: Minimum breaking wave height at the beach in feet:</strong></h2>
-    <p>Defines the lowest height waves start to break, crucial for surfability and beach safety. Influenced by sea floor topography, wave energy, and tide levels, it varies by beach due to local conditions.</p>
-    <ul>
-      <li><strong>Breaking Wave Height:</strong> Height of a wave as it starts to break, critical for assessing surf conditions.</li>
-      <li><strong>Minimum Breaking Wave Height:</strong> Indicates the lowest height waves break, offering insights into potential surfing conditions and safety considerations.</li>
-      <li><strong>Measurement in Feet:</strong> Uses the imperial system, common in countries like the United States, providing direct wave height indication.</li>
-      <li><strong>At the Beach:</strong> Specifies measurement relevance to particular beach locations, where breaking wave heights can vary significantly.</li>
-    </ul>
-    <p>This metric helps assess beach conditions for surfing, shorebreak risk, and other recreational or safety considerations.</p>
+     <h2><strong>Minimum Breaking Wave Height (ft): Smallest Surfable Wave Height in Feet</strong></h2>
+<p>Measures the shortest height where waves begin to break, which is key for surfing and beach safety. This height changes with the ocean's floor shape and the tides, and it's different for each beach. Knowing this figure helps surfers understand the smallest waves they can surf and helps everyone stay safe on the shore. It's measured in feet, the usual unit for the U.S.</p>
   `;
 	break;
     case "lotusMaxBWH_ft":
 	description = `
-     <h2><strong>lotusMaxBWH_ft: Maximum breaking wave height at the beach in feet:</strong></h2>
-    <p>Denotes the highest height waves are seen to break at specific beach locations, measured in feet. Essential for gauging potential maximum wave conditions, impacting surfing, safety, and coastal management.</p>
-    <ul>
-      <li><strong>Maximum Breaking Wave Height:</strong> The tallest height waves break, influenced by wind speed, swell direction, and seabed contours.</li>
-      <li><strong>Measurement in Feet:</strong> Height measured in feet, a standard unit in the United States, aiding surfers and coastal managers in planning and safety.</li>
-      <li><strong>At the Beach:</strong> Measurement specific to beach locations, where wave conditions vary greatly due to local topography and geographical factors.</li>
-    </ul>
-    <p>"lotusMaxBWH_ft" informs on the upper wave height limit at beaches, offering insights into extreme surfing conditions and coastal infrastructure considerations.</p>
+     <h2><strong>Maximum Breaking Wave Height (ft): Tallest Wave Height at the Beach in Feet</strong></h2>
+<p>Indicates the tallest waves that can break at a beach, a key factor for surfers looking for big waves and for maintaining safety along the shore. Factors like wind, swell direction, and the shape of the sea floor affect this height. Measured in feet for consistency within the U.S., this metric helps with beach safety plans and managing coastal areas.</p>
   `;
 	break;
     case "lotusSighPartX_mt":
 	description = `
-    <h2><strong>lotusSighPartX_mt: Significant wave height of swell partition X in meters:</strong></h2>
-    <p>Denotes the significant wave height within a specific swell partition, vital for marine forecasting. "LOTUS" is Surfline's model, "Sigh" represents "Significant Height", and "PartX" refers to individual swell systems affecting a location, with "X" as the partition number.</p>
-    <ul>
-      <li><strong>lotus:</strong> Surfline's forecast model.</li>
-      <li><strong>Sigh:</strong> Abbreviation for "Significant Height", indicating the average height of the highest third of waves.</li>
-      <li><strong>PartX:</strong> Denotes multiple swell partitions, with "X" specifying the partition number, allowing differentiation between swell systems.</li>
-      <li><strong>_mt:</strong> Measurement unit in meters, providing a standardized measure of wave heights.</li>
-    </ul>
-    <p>This metric is crucial for surfers and maritime operations, offering insights into wave energy and surf quality across different swell sources.</p>
+    <h2><strong>Significant Wave Height (mt): Height of Wave Group X in Meters</strong></h2>
+<p>Measures the height of a certain group of waves, part of Surfline's LOTUS model, essential for predicting sea conditions. "Sigh" means it's the average of the tallest waves in the group, and "PartX" identifies which group of waves, or swell system, we're looking at. Measured in meters, it helps surfers and those at sea understand what size of waves to expect from different sources.</p>
   `;
 	break;
     case "lotusTPPartX_sec":
 	description = `
-    <h2><strong>lotusTPPartX_sec: Peak period of swell partition X in seconds:</strong></h2>
-    <p>Key to surf forecasting, this indicates the time interval between successive waves in a swell's most energy-dense part, measured in seconds. The "TP" stands for "Peak Period," and "PartX" for a specific swell partition, with "X" denoting the partition number.</p>
-    <ul>
-      <li><strong>Shorter Peak Periods (5-8 seconds):</strong> Suggest locally generated wind swells, typically less powerful and choppier.</li>
-      <li><strong>Longer Peak Periods (12-20 seconds or more):</strong> Indicate swells from distant storms, characterized by more organized, powerful, and cleaner waves.</li>
-    </ul>
-    <p>This measurement is crucial for predicting wave size, energy, and surf quality, aiding in identifying optimal surfing conditions.</p>
+    <h2><strong>Peak Period (sec): Time Between Waves for Swell Group X in Seconds</strong></h2>
+<p>Essential for understanding waves, this figure tells us how many seconds pass between waves in the strongest part of a swell. "TP" means "Peak Period," and "PartX" specifies which group of waves we're measuring, with "X" as its identifier.</p>
+<p>Short peak periods mean the waves are smaller and choppier, often from local winds. Long peak periods point to big, smooth waves that started from far-off storms. Surfers and ocean forecasters use this to predict the best waves for surfing.</p>
   `;
 	break;
     case "lotusPDirPartX_deg":
 	description = `
-    <h2><strong>lotusPDirPartX_deg: Compass direction of swell partition X in degrees:</strong></h2>
-    <p>Indicates the primary direction from which a swell partition originates, using degrees. "LotusPDir" likely refers to "Lotus Peak Direction," with "PartX" signifying individual swell partitions distinguished by origin, period, or direction.</p>
-    <ul>
-      <li><strong>_deg:</strong> Direction measured in degrees, adhering to compass conventions (North as 0/360, East as 90, South as 180, West as 270).</li>
-    </ul>
-    <p>This data is vital for predicting how swells interact with coastlines and underwater features, influencing wave characteristics and surfing conditions.</p>
+    <h2><strong>Swell Direction (deg): Swell Direction for Wave Group X</strong></h2>
+<p>Shows where a group of waves is coming from, measured in compass degrees. "LotusPDir" suggests it's the main direction for the wave group labeled "X." </p>
+<p>The direction is noted in degrees, with 0/360 for North, 90 for East, 180 for South, and 270 for West. Knowing this helps forecast how waves will approach the shore, which is key for surfers and coastal planning.</p>
   `;
 	break;
     case "lotusSpreadPartX_deg":
 	description = `
-    <h2><strong>lotusSpreadPartX_deg: Spread of swell partition X in degrees:</strong></h2>
-    <p>Defines the range of directions from which waves in a swell partition are arriving, measured in degrees. A narrow spread indicates waves come from a uniform direction, producing consistent surf conditions. A wide spread suggests a broader range of directions, leading to mixed or chaotic sea states, impacting surf conditions and beach safety.</p>
-    <p>For example, a main direction of 270 degrees (west) with a 30-degree spread indicates waves moving primarily west but can vary from 255 (WSW) to 285 degrees (WNW).</p>
+    <h2><strong>Swell Spread (deg): Wave Direction Range for Group X</strong></h2>
+<p>Shows the variety of directions that waves from a particular group are coming from, in degrees. A smaller range means more uniform waves good for surfing, while a larger range could mean unpredictable conditions. For instance, if waves are mostly coming from the west (270 degrees), a 30-degree spread would mean they could be shifting slightly southwest or northwest.</p>
   `;
 	break;
 	// Add more cases if needed
