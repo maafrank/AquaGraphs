@@ -172,6 +172,36 @@
 						</div>
 						</section>
 
+						<!-- Panel (Comparative Analysis Preface) -->
+						<section class="panel banner large left">
+							<div class="content color4 span-10">
+								<h2 class="major">Comparing Different Wave Conditions</h2>
+								<p>Here, we look at what happens during the biggest and smallest waves. We're using these graphs to put together all that we've learned about the ocean's patterns and their effects.</p>
+								
+								<h2>What We Learn from Wave Patterns</h2>
+								<p>Looking at a week's worth of hourly wave data, we can spot some trends:</p>
+								<ul>
+								  <li>The <strong>biggest waves</strong> happen mostly in the winter, from December to January, likely because of winter storms.</li>
+								  <li>The <strong>smallest waves</strong> come in the calmer months of July to November.</li>
+								  <li>The really big waves usually come from the west, which makes sense since Morro Bay faces the Pacific Ocean.</li>
+								  <li>Tides don't seem to change the wave heights much during these times; there are other more important factors at play.</li>
+								  <li>The <strong>time between waves</strong> has a small link to wave height, with bigger waves tending to follow one another more slowly.</li>
+								</ul>
+								<p>This all shows us just how complicated the ocean is and all the things that affect the waves at Morro Bay.</p>
+						</section>
+
+						<!-- Panel (Comparison graph) -->
+						<section class="panel banner large left">
+
+						<div class="content color4-alt span-3">
+						        <h2 class="major">Wave Height and Tide Over Time with Swell Direction and Peak Period</h2>
+						</div>
+						<div class="content color4-alt span-7">
+							<div style="height: 100%" id="big-chart1" data-spec="{{ big_chart1 | tojson | safe }}"></div>
+							<div style="height: 100%" id="small-chart1" data-spec="{{ small_chart1 | tojson | safe }}"></div>
+						</div>
+						</section>
+
 					</div>
 
 			</div>

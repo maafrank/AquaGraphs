@@ -577,7 +577,7 @@ def generate_complex_chart(wave_set, tide, swell_dir, peak_period):
     merged_data['compass_direction'] = merged_data['average_swell_dir_swell'].apply(degrees_to_compass)
     
     swell_color_scale = alt.Scale(domain=['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'],
-                                  range=['purple', 'orange', 'yellow', 'teal', 'brown', 'red', 'blue', 'green'])
+                                  range=['purple', 'teal', 'brown', 'blue', 'red', 'green', 'orange', 'yellow',])
 
     size_scale = alt.Scale(domain=[15, 25],  # Assuming the peak period goes from 0 to 20 seconds
                            range=[10, 200])  # Size range from small to large
@@ -585,36 +585,52 @@ def generate_complex_chart(wave_set, tide, swell_dir, peak_period):
     # Chart for Tide levels
     tide_chart = alt.Chart(merged_data, width="container").mark_line(color='orange').encode(
         x='time_period:T',
-        y='tide_ft_tide:Q',
-        tooltip=['time_period:T', 'tide_ft_tide:Q']
+        y=alt.Y('tide_ft_tide:Q', title=None),
+        tooltip=[
+            alt.Tooltip('time_period:T', title='Time Period'),
+            alt.Tooltip('tide_ft_tide:Q', title='Tide Height')
+        ]
     ) + alt.Chart(merged_data, width="container").mark_point(opacity=0.5).encode(
         x='time_period:T',
-        y='tide_ft_tide:Q',
-        size=alt.Size('average_peak_period_peak:Q', scale=size_scale, title='Peak Period (sec)'),  # Dynamic size based on peak period
-        color=alt.Color('compass_direction:N', scale=swell_color_scale, title='Swell Direction'),  # Color by swell direction
-        tooltip=['time_period:T', 'tide_ft_tide:Q', 'compass_direction:N', 'average_peak_period_peak:Q']
+        y=alt.Y('tide_ft_tide:Q', title=None),
+        size=alt.Size('average_peak_period_peak:Q', scale=size_scale, title='Peak Period'),
+        color=alt.Color('compass_direction:N', scale=swell_color_scale, title='Swell Direction'),
+        tooltip=[
+            alt.Tooltip('time_period:T', title='Time Period'),
+            alt.Tooltip('tide_ft_tide:Q', title='Tide Height'),
+            alt.Tooltip('compass_direction:N', title='Compass Direction'),
+            alt.Tooltip('average_peak_period_peak:Q', title='Peak Period')
+        ]
     )
     
     # Chart for Wave heights
     wave_height_chart = alt.Chart(merged_data, width="container").mark_line(color='blue').encode(
         x='time_period:T',
-        y='lotusMaxBWH_ft_wave:Q',
-        tooltip=['time_period:T', 'lotusMaxBWH_ft_wave:Q']
+        y=alt.Y('lotusMaxBWH_ft_wave:Q', title=None),
+        tooltip=[
+            alt.Tooltip('time_period:T', title='Time Period'),
+            alt.Tooltip('lotusMaxBWH_ft_wave:Q', title='Wave Height')
+        ]
     ) + alt.Chart(merged_data, width="container").mark_point(opacity=0.5).encode(
         x='time_period:T',
-        y='lotusMaxBWH_ft_wave:Q',
-        size=alt.Size('average_peak_period_peak:Q', scale=size_scale, title='Peak Period (sec)'),  # Dynamic size based on peak period
-        color=alt.Color('compass_direction:N', scale=swell_color_scale, title='Swell Direction'),  # Color by swell direction
-        tooltip=['time_period:T', 'lotusMaxBWH_ft_wave:Q', 'compass_direction:N', 'average_peak_period_peak:Q']
+        y=alt.Y('lotusMaxBWH_ft_wave:Q', title=None),
+        size=alt.Size('average_peak_period_peak:Q', scale=size_scale, title='Peak Period'),
+        color=alt.Color('compass_direction:N', scale=swell_color_scale, title='Swell Direction'),
+        tooltip=[
+            alt.Tooltip('time_period:T', title='Time Period'),
+            alt.Tooltip('lotusMaxBWH_ft_wave:Q', title='Wave Height'),
+            alt.Tooltip('compass_direction:N', title='Compass Direction'),
+            alt.Tooltip('average_peak_period_peak:Q', title='Peak Period')
+        ]
     )
     
     # Combine charts
     combined_chart = alt.layer(tide_chart, wave_height_chart).resolve_scale(
         y='shared'
     ).properties(
-        title='Wave Height and Tide Over Time with Swell Direction and Peak Period',
-        width=500,
-        height=300
+        #title='Wave Height and Tide Over Time with Swell Direction and Peak Period',
+        width=350,
+        height=225,
     )
 
     return combined_chart
@@ -656,7 +672,7 @@ def generate_top_biggest_waves():
     chart2 = generate_complex_chart(wave_set2, wave_set2_tide, wave_set2_swell_dir, wave_set2_peak_period)
     chart3 = generate_complex_chart(wave_set3, wave_set3_tide, wave_set3_swell_dir, wave_set3_peak_period)
     
-    return chart1 | chart2 #| chart3
+    return (chart1 | chart2).properties(background='rgba(255, 255, 255, 0)') #| chart3
 
 def generate_top_smallest_waves():
     aggregated_data = process_data('lotusMinBWH_ft', 'Week', None, None)
@@ -694,7 +710,7 @@ def generate_top_smallest_waves():
     chart2 = generate_complex_chart(wave_set2, wave_set2_tide, wave_set2_swell_dir, wave_set2_peak_period)
     chart3 = generate_complex_chart(wave_set3, wave_set3_tide, wave_set3_swell_dir, wave_set3_peak_period)
     
-    return chart1 | chart2 #| chart3
+    return (chart1 | chart2).properties(background='rgba(255, 255, 255, 0)') #| chart3
 
 #####################
 ## Millie's Charts ##
