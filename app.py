@@ -885,6 +885,10 @@ def partition_height_period_update():
     partition_height_period_unit = request.args.get('partition_height_period_unit', 'agg_by_date')
     return jsonify(partition_height_period_selection(partition_height_period_unit).to_dict())
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/')
 def home():
 

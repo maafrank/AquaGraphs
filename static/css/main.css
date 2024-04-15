@@ -85,6 +85,26 @@ input[type="date"] {
   font-size: 1em; /* adjust as needed */
 }
 
+/* Footer */
+#footer {
+    padding: 2em 0;
+    background-color: #2e2b37;
+    text-align: center;
+}
+
+#footer .inner {
+    margin: 0 auto;
+    width: 80%;
+    max-width: 75em;
+}
+
+#footer .actions {
+    margin: 0 0 1em 0;
+}
+
+/* Add more styling rules here if needed */
+
+
 /* Page */
 
 	@-moz-keyframes load-spinner {

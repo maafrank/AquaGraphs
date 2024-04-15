@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<!--
+    Ethereal by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+  -->
+<html>
+  <head>
+    <title>Charting Wave Data</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+    <noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <script src="https://unpkg.com/scrollama"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css' rel='stylesheet' />
+  </head>
+  <body class="is-preload">
+    
+    <!-- Page Wrapper -->
+    <div id="page-wrapper">
+      
+      <!-- Wrapper -->
+      <div id="wrapper">
+	
+	<!-- Panel (Introduction) -->
+	<section class="panel banner right">
+	  <div class="content color0 span-3-75">
+            <h1 class="major">About Us</h1>
+            <p>Welcome to our website dedicated to charting and analyzing wave data at Morro Bay. This page is here to provide you with insights into our project, our goals, and the passionate team behind this research.</p>
+            <p>Our mission is to enhance understanding of ocean dynamics through detailed visualizations and data-driven analysis. Here, you will learn about the technologies we use, the data we collect, and the people who make it all happen.</p>
+            <ul class="actions">
+              <li><a href="#first" class="button primary color1 circle icon solid fa-angle-right">Meet the Team</a></li>
+            </ul>
+	  </div>
+	  <div class="image filtered span-1-75" data-position="50% 25%">
+            <img src="{{ url_for('static', filename='img/MorroRock.jpeg') }}" alt="" />
+	  </div>
+	</section>
+	
+	
+	<section class="panel banner large left">
+	  <div class="content color2 span-3">
+            <h2 class="major">Meet Our Team</h2>
+            <p>Our project is brought to life by a dedicated team committed to enhancing our understanding of marine dynamics. Learn more about the passionate individuals behind our research.</p>
+	  </div>
+	  <div class="content color2-alt span-7">
+            <h3>Matthew Frank</h3>
+            
+            <h3>Millie Kobayashi</h3>
+            
+            <h3>Chenghao Meng</h3>
+	  </div>
+	</section>
+	
+	<section class="panel banner large left">
+	  <div class="content color4 span-3">
+            <h2 class="major">Our Users & Their Goals</h2>
+            <p>This website serves surfers and oceanography enthusiasts, aiming to enhance their understanding of wave patterns in Morro Bay.</p>
+	  </div>
+	  <div class="content color4-alt span-7">
+            <h3>The Task at Hand</h3>
+            <p>Our primary task is to clarify the factors that affect breaking wave sizes in Morro Bay. Through detailed analysis, we enable better planning and deeper understanding for our users.</p>
+	    
+            <h3>Data Utilized</h3>
+            <p>Our research is supported by multiyear hourly data from Surfline, providing a solid foundation for analyzing long-term trends and seasonal variations in wave heights.</p>
+	  </div>
+	</section>
+
+	<section class="panel banner large left">
+	  <div class="content color2 span-3">
+            <h2 class="major">Visualization Techniques & Tools</h2>
+            <p>Explore the cutting-edge tools and methods we use to bring complex data to life, making it accessible and actionable for our audience.</p>
+	  </div>
+	  <div class="content color2-alt span-7">
+            <h3>Interactive Charts</h3>
+            <p>We use dynamic, interactive charts to represent changes in wave heights over time, allowing users to visualize trends at a glance and explore details as needed. Our visualizations are crafted using Altair, a powerful statistical visualization library for Python.</p>
+	    
+            <h3>Geospatial Mapping</h3>
+            <p>Our use of geospatial mapping tools, such as Mapbox, enhances understanding by situating data within the geographic layout of Morro Bay, providing a spatial context to the wave data.</p>
+	    
+            <h3>Customizable Data Aggregation</h3>
+            <p>Our application provides users with the ability to explore each variable and aggregate the data based on date, time, and selected variables, offering a tailored analytical experience and deeper insights into the data.</p>
+	    
+            <h3>Flask Web Application</h3>
+            <p>Our project is supported by a custom Flask web application, which serves as the interactive platform for our visualizations, facilitating real-time data interaction and exploration.</p>
+	  </div>
+	</section>
+
+      </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>
