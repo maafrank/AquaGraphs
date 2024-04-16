@@ -139,10 +139,31 @@ function updateDescription(chartId, variable) {
     descriptionElement.innerHTML = description;
 }
 
+//Added by Millie:
+// Function to load and update chart data
+function loadChartData2(chartId) {	  
+    const variable = document.getElementById(`variable${chartId}`).value;
+    const aggregation = document.getElementById(`aggregation${chartId}`).value;
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    
+    updateDescription(chartId, variable);
+    
+    const dateQuery = `&startDate=${startDate}&endDate=${endDate}`;
+    fetch(`/update_chart?variable=${variable}&aggregation=${aggregation}${dateQuery}`)
+	.then(response => response.json())
+	.then(chartSpec => {
+	    vegaEmbed(`#chart${chartId}`, chartSpec);
+	})
+	.catch(error => console.error('Error loading chart:', error));
+}
+
+function updateChart() {
+    loadChartData('1');
+}
 // Function to load and update partition_height_period
 function load_partition_height_period() {
-	const partition_height_period_unit = document.getElementById('partition_height_period_unit').value;	  
-    const unit = document.getElementById(`partition_height_period_unit`).value;
+    const partition_height_period_unit = document.getElementById(`partition_height_period_unit`).value;
 	    fetch(`/partition_height_period_update?partition_height_period_unit=${partition_height_period_unit}`)
 		.then(response => response.json())
 		.then(chartSpec => {

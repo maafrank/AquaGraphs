@@ -453,7 +453,7 @@ def generate_swell_partitions_chart():
     for i in range(6):  # For partitions 0-5
         partition_variable = variable.replace("X",f"{i}")
         partition_chart = base.mark_line(color='yellow').encode(
-            y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'Partition {i}'),
+            y=alt.Y(f'{partition_variable}:Q', scale=alt.Scale(domain=[global_min, global_max]), title=f'Wave Height for Partition {i} (meters)'),
             tooltip=[alt.Tooltip('time_period:N', title='Time Period'), alt.Tooltip(f'{partition_variable}:Q', title=f'Partition {i}')]
         ).properties(
         width=300,
@@ -513,11 +513,14 @@ def generate_swell_partitions_chart2():
         height=600,
         # title='Weighted Sum of Wave Partitions vs. Total Significant Wave Height'
     )
+    aggregated_data["color"] = "Sum of Partitions (meters)"
+    aggregated_data["color2"] = 'Total Significant Wave Height (meters)'
     
     # Create a line chart with dots for sum of partitions
-    sum_chart = base.mark_line(color='yellow', strokeWidth=3).encode(
-        y=alt.Y('sum_of_partitions:Q', title='Sum of Partitions (meters)', scale=alt.Scale(domain=(min_value, max_value))),
-        tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('sum_of_partitions:Q', title='Sum of Partitions')]
+    sum_chart = base.mark_line(strokeWidth=3).encode(
+        y=alt.Y('sum_of_partitions:Q', title='Sum of Partitions (meters)', axis = alt.Axis(title = "Sum of Partitions (meters)"), scale=alt.Scale(domain=(min_value, max_value))),
+        tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('sum_of_partitions:Q', title='Sum of Partitions')],
+        color = alt.Color('color:N', legend = alt.Legend(title="Measurements"), scale = alt.Scale(domain=["Sum of Partitions (meters)", "Total Significant Wave Height (meters)"], range=['yellow', 'blue']))
     )
     
     sum_points = base.mark_point(color='yellow', size=50).encode(
@@ -527,9 +530,10 @@ def generate_swell_partitions_chart2():
     
     
     # Create a line chart with dots for total significant wave height
-    total_wave_height_chart = base.mark_line(color='blue', strokeWidth=3).encode(
-        y=alt.Y('lotusSigh_mt:Q', title='Total Significant Wave Height (meters)', scale=alt.Scale(domain=(min_value, max_value))),
-        tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('lotusSigh_mt:Q', title='Total Significant Wave Height')]
+    total_wave_height_chart = base.mark_line(strokeWidth=3).encode(
+        y=alt.Y('lotusSigh_mt:Q', title='Total Significant Wave Height (meters)', axis = alt.Axis(title = "Total Significant Wave Height (meters)"), scale=alt.Scale(domain=(min_value, max_value))),
+        tooltip=[alt.Tooltip('time_period:T', title='Time Period'), alt.Tooltip('lotusSigh_mt:Q', title='Total Significant Wave Height')],
+        color = alt.Color('color2:N')
     )
     
     total_points = base.mark_point(color='blue', size=50).encode(
@@ -666,12 +670,13 @@ def generate_top_biggest_waves():
     wave_set1_peak_period['average_peak_period'] = wave_set1_peak_period[columns].max(axis=1)
     wave_set2_peak_period['average_peak_period'] = wave_set2_peak_period[columns].max(axis=1)
     wave_set3_peak_period['average_peak_period'] = wave_set3_peak_period[columns].max(axis=1)
-
+    
     chart1 = generate_complex_chart(wave_set1, wave_set1_tide, wave_set1_swell_dir, wave_set1_peak_period)
     chart2 = generate_complex_chart(wave_set2, wave_set2_tide, wave_set2_swell_dir, wave_set2_peak_period)
     chart3 = generate_complex_chart(wave_set3, wave_set3_tide, wave_set3_swell_dir, wave_set3_peak_period)
+    layered = (chart1 | chart2)
     
-    return (chart1 | chart2).properties(background='rgba(255, 255, 255, 0)') #| chart3
+    return layered.properties(background='rgba(255, 255, 255, 0)') #| chart3
 
 def generate_top_smallest_waves():
     aggregated_data = process_data('lotusMinBWH_ft', 'Week', None, None)
@@ -718,10 +723,16 @@ def generate_top_smallest_waves():
 def dhp_agg(par_num, dfedit, unit):
     #line graph of swell height of partition par_num by day
     #Aggregate by day
+    dfedit[f"dir{par_num}"] = dfedit[f"lotusPDirPart{par_num}_deg"].apply(lambda x: degrees_to_compass(x))
+    swell_color_scale = alt.Scale(domain=['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'],
+                                  range=['purple', 'orange', 'yellow', 'teal', 'brown', 'red', 'blue', 'green'])
+    size_scale = alt.Scale(domain=[15, 25],  # Assuming the peak period goes from 0 to 20 seconds
+                           range=[10, 200])  # Size range from small to large
     scat = alt.Chart(dfedit).mark_point(shape="wedge", filled=True, size = 300).encode(
         x=alt.X(unit),
         y = alt.Y(f"lotusSighPart{par_num}_mt"),
-        color=alt.Color(f"lotusTPPart{par_num}_sec", scale=alt.Scale(range=["yellow", "green", "blue"])),
+        color=alt.Color(f"dir{par_num}", scale = swell_color_scale, title='Swell Direction'),
+        size = alt.Size(f"lotusTPPart{par_num}_sec", title='Peak Period (sec)'),
         angle=alt.Angle(f"lotusPDirPart{par_num}_deg").scale(domain=[0, 360])
     ).properties(width = 1000, height = 300)
 
@@ -731,12 +742,12 @@ def dhp_agg(par_num, dfedit, unit):
     ).properties(width = 1000, height = 300)
     return alt.layer(line, scat)
 
-def partition_height_period_selection(unit = "agg_by_date"):
+def partition_height_period_selection(unit):
+    interval = alt.selection_interval(encodings=['x'])
     if unit == "agg_by_date":
         unit = "date"
     else:
-        unit="week"
-    interval = alt.selection_interval(encodings=['x'])
+        unit = "week"
     #add date column which is a datetime that has year-month-date
     data["date"] = pd.to_datetime(data["datetime_local"].apply(lambda x: datetime.datetime.strptime(x[:10], "%Y-%m-%d")))
     #add week column which is a datetime of the first day of the week
@@ -755,7 +766,7 @@ def partition_height_period_selection(unit = "agg_by_date"):
 
     #creating the top graph, which is 6 lines, each representing the swell height for certain partition aggregated by day or week
     top_graph = alt.layer(dhp_agg(0, dfedit, unit), dhp_agg(1, dfedit, unit), dhp_agg(2, dfedit, unit), dhp_agg(3, dfedit, unit), dhp_agg(4, dfedit, unit), dhp_agg(5, dfedit, unit)).encode(
-    y=alt.Y(title='Swell Height'))
+    y=alt.Y(title='Swell Height')).properties(width = 800, height = 300)
 
     # Create a selection that chooses the nearest point & selects based on x-value
     nearest = alt.selection_point(nearest=True, on='mouseover', fields=['week'], empty=True)
@@ -775,13 +786,12 @@ def partition_height_period_selection(unit = "agg_by_date"):
 
     chart = base_chart.mark_line().encode(
         x=alt.X(unit),
-        y=alt.Y("lotusSigh_mt:Q")
-    ).properties(width=1250, height=300).add_params(
+        y=alt.Y("lotusSigh_mt:Q")).add_params(
         interval
     )
 
     #select in bottom chart
-    final = alt.layer(chart, selectors).properties(width=600, height=300)
+    final = alt.layer(chart, selectors).properties(width=600, height=100)
 
     #implement the selection to top graph 
     finaladd = top_graph.encode(x=alt.X(unit, scale=alt.Scale(domain=interval)))
@@ -789,7 +799,7 @@ def partition_height_period_selection(unit = "agg_by_date"):
     #present the top and bottom graph
     view = alt.vconcat(finaladd, final).configure_axis(labelOverlap='parity')
 
-    return view
+    return view.properties(background='rgba(255, 255, 255, 0)')
 
 #####################
 ## Format Charts ##
@@ -918,7 +928,7 @@ def home():
 
     #added by Millie:
     partition_height_period_unit = request.args.get('partition_height_period_unit', default='agg_by_date')
-    partition_height_period_chart = partition_height_period_selection(partition_height_period_unit)
+    partition_height_period_chart = partition_height_period_selection(partition_height_period_unit).to_dict()
 
     return render_template('index.html',
                            seasonal_chart_spec=seasonal_chart_spec,

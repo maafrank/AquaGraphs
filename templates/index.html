@@ -268,6 +268,38 @@
 						</section>
 
 						</div>
+						<!-- Panel (Millie's Interactivity Graphs) -->
+						<section class="panel banner small left">
+							<div class="content color2-alt span-10">
+	
+									<div style="display: flex; justify-content: space-between; align-items: center;">
+								  
+	
+								<div>
+								  
+									<select id="partition_height_period_unit" onchange="load_partition_height_period()">Update Chart 1>
+										<option value="agg_by_date">Day</option>
+										<option value="agg_by_week">Week</option>
+										  <!-- Add more options as needed -->
+									  </select>
+									  <h2>Interacting with Wave Direction</h2>
+								  <p>This line graph represents the swell height by partition. 
+									The angle and color of the triangles represent the direction of the swell. 
+									The size of the triangles represent the period.
+									Select a time frame in the bottom graph to have a more detailed view of the top graph. </p>
+								  </div>
+								 </div> 
+								</div>
+								</section>
+							
+						<!-- Panel (Millie's Interactivity Graphs) -->
+						<section class="panel banner large left">
+							<div class="content color2-alt span-10">	
+								  <div style="height: 100%" id="partition_height_period" data-spec="{{ partition_height_period_chart | tojson | safe }}></div>
+							</div>
+							</section>
+						
+						</section>
 						
 
 			</div>
