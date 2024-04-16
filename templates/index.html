@@ -260,41 +260,40 @@
 	  						</div>
 						</div>
 						</section>
+
 						<!-- Panel (Interactions Graph) -->
 						<section class="panel banner large left">
 						<div class="content color2-alt span-10">	
 	  						<div style="height: 100%" id="chart1"></div>
 						</div>
 						</section>
-
-						</div>
+						
 						<!-- Panel (Millie's Interactivity Graphs) -->
 						<section class="panel banner small left">
-							<div class="content color2-alt span-10">
+							<div class="content color4-alt span-10">
 	
 									<div style="display: flex; justify-content: space-between; align-items: center;">
 								  
 	
-								<div>
+									  <div>
 								  
 									<select id="partition_height_period_unit" onchange="load_partition_height_period()">Update Chart 1>
 										<option value="agg_by_date">Day</option>
-										<option value="agg_by_week">Week</option>
+									        <option value="agg_by_week">Week</option>
 										  <!-- Add more options as needed -->
 									  </select>
 									  <h2>Interacting with Wave Direction</h2>
-								  <p>This line graph represents the swell height by partition. 
-									The angle and color of the triangles represent the direction of the swell. 
-									The size of the triangles represent the period.
-									Select a time frame in the bottom graph to have a more detailed view of the top graph. </p>
+									  <p>Explore the nuances of swell height with our interactive line graph, segmented for detailed analysis. The orientation and hue of each triangle on the graph denote the swell's direction, while their size reflects the duration of the swell period.</p>
+									  <p>The accompanying timeline graph serves as a navigational tool, allowing you to select and refine the time period displayed in the main graph above. By adjusting the visible timeframe in this lower graph, you can focus on and analyze the swell data for specific dates and times of interest.</p>
+
 								  </div>
 								 </div> 
 								</div>
 								</section>
 							
 						<!-- Panel (Millie's Interactivity Graphs) -->
-						<section class="panel banner large left">
-							<div class="content color2-alt span-10">	
+						<section class="panel banner medium left">
+							<div class="content color4-alt span-10">	
 								  <div style="height: 100%" id="partition_height_period" data-spec="{{ partition_height_period_chart | tojson | safe }}></div>
 							</div>
 							</section>
